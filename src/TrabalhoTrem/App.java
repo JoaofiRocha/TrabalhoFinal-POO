@@ -1,5 +1,11 @@
 package TrabalhoTrem;
+import java.util.ArrayList;
 import java.util.Scanner;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.io.IOException;
+import java.io.BufferedReader;
 
 /**
  *  Principal classe do programa
@@ -24,19 +30,26 @@ public class App {
         GaragemLocomotivas garagemLocomotivas = new GaragemLocomotivas();
 
         // Cria locomotivas para utilização do App
-        generateLocomotivas(garagemLocomotivas);
+    //    generateLocomotivas(garagemLocomotivas);
 
         // Inicializa a garagem para vagões
         GaragemVagoes garagemVagoes = new GaragemVagoes();
 
         // Cria vagões para utilização do App
-        generateVagoes(garagemVagoes);
+     //  generateVagoes(garagemVagoes);
 
         // Inicializa o patio para os trems
         PatioComposicoes patioComposicoes = new PatioComposicoes();
 
-        // Recebe inputs do usuário
+        // Define o Path de onde será carregado as locomotivas e os vagões
+        Path vagoesCSV = Paths.get("C:\\Users\\meu\\Desktop\\Trem_Exercicio2\\Exercicio2-POO\\src\\TrabalhoTrem\\vagoes.csv");
+        Path locomotivasCSV = Paths.get("C:\\Users\\meu\\Desktop\\Trem_Exercicio2\\Exercicio2-POO\\src\\TrabalhoTrem\\locomotivas.csv");
 
+        // Realiza a leitura dos arquivos CSV Vagões e Locomotiva e armazena os armazena em sua respectiva garagem
+        lerVagoes(vagoesCSV, garagemVagoes);
+        lerLocomotivas(locomotivasCSV, garagemLocomotivas);
+
+        // Recebe inputs do usuário
         int userIn;
         do {
             System.out.println("Criar um Trem(1), Editar um Trem(2), Listar Todos os Trens(3), Desfazer um Trem(4), Sair(5)");
@@ -507,5 +520,55 @@ public class App {
         return 100;
     }
 
+public static void lerVagoes(Path vagoesCSV, GaragemVagoes garagemVagoes)
+{
+    try(BufferedReader br = Files.newBufferedReader(vagoesCSV))
+    {
+        String line = "";
+        while( (line = br.readLine() ) != null)
+        {
+            String[] partes = line.split("," , 3);
+            if(partes.length == 3)
+            {
+                int codigo = Integer.parseInt(partes[0].trim());
+                double maxCarga = Double.parseDouble(partes[1].trim());
+                Vagao vag = new Vagao(codigo, maxCarga, 0);
+                garagemVagoes.setVagao(vag);
+            }
+        }
+    }
+
+    catch (IOException e)
+    {
+        throw new RuntimeException(e);
+    }
+}
+
+    public static void lerLocomotivas(Path locomotivasCSV, GaragemLocomotivas garagemLocomotivas)
+    {
+        try(BufferedReader br = Files.newBufferedReader(locomotivasCSV))
+        {
+            String line = "";
+            while( (line = br.readLine()) != null)
+            {
+                String[] partes = line.split("," , 4);
+                if(partes.length == 4)
+                {
+                    int id = Integer.parseInt(partes[0].trim());
+                    double pesoMax = Double.parseDouble(partes[1].trim());
+                    int quantMaxVagoes = Integer.parseInt(partes[2].trim());
+                    int a = quantMaxVagoes;
+                    Locomotiva locom = new Locomotiva(id,pesoMax,quantMaxVagoes);
+                    garagemLocomotivas.setLocomotiva(locom);
+                }
+            }
+
+
+        }
+        catch(IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
 
 }
