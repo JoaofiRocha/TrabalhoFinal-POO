@@ -42,8 +42,9 @@ public class App {
         PatioComposicoes patioComposicoes = new PatioComposicoes();
 
         // Define o Path de onde será carregado as locomotivas e os vagões
-        Path vagoesCSV = Paths.get("C:\\Users\\meu\\Desktop\\Trem_Exercicio2\\Exercicio2-POO\\src\\TrabalhoTrem\\vagoes.csv");
-        Path locomotivasCSV = Paths.get("C:\\Users\\meu\\Desktop\\Trem_Exercicio2\\Exercicio2-POO\\src\\TrabalhoTrem\\locomotivas.csv");
+        String diretorioAtual = Paths.get("").toAbsolutePath().toString();
+        Path vagoesCSV = Paths.get(diretorioAtual + "\\TrabalhoTrem\\"+ "vagoes.csv");
+        Path locomotivasCSV = Paths.get(diretorioAtual + "\\TrabalhoTrem\\"+ "locomotivas.csv");
 
         // Realiza a leitura dos arquivos CSV Vagões e Locomotiva e armazena os armazena em sua respectiva garagem
         lerVagoes(vagoesCSV, garagemVagoes);
