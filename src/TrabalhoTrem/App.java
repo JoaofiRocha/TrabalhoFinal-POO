@@ -1,4 +1,5 @@
 package TrabalhoTrem;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.nio.file.Path;
@@ -43,8 +44,10 @@ public class App {
 
         // Define o Path de onde será carregado as locomotivas e os vagões
         String diretorioAtual = Paths.get("").toAbsolutePath().toString();
-        Path vagoesCSV = Paths.get(diretorioAtual + "\\TrabalhoTrem\\"+ "vagoes.csv");
-        Path locomotivasCSV = Paths.get(diretorioAtual + "\\TrabalhoTrem\\"+ "locomotivas.csv");
+        String separadorArquivos = File.separator;
+        Path vagoesCSV = Paths.get(diretorioAtual + separadorArquivos + "src" + separadorArquivos + "TrabalhoTrem" + separadorArquivos + "vagoes.csv");
+        Path locomotivasCSV = Paths.get(diretorioAtual + separadorArquivos + "src" + separadorArquivos + "TrabalhoTrem" + separadorArquivos + "locomotivas.csv");
+
 
         // Realiza a leitura dos arquivos CSV Vagões e Locomotiva e armazena os armazena em sua respectiva garagem
         lerVagoes(vagoesCSV, garagemVagoes);
