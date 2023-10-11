@@ -11,10 +11,10 @@ public class Composicao {
     private final int id;
 
     //Armazena o número de vagões
-    private ArrayList<Vagao> vagoes = new ArrayList<Vagao>();
+    //private ArrayList<Vagao> vagoes = new ArrayList<Vagao>();
 
     //Armazena o número de locomotivas
-    private ArrayList<Locomotiva> locomotivas = new ArrayList<Locomotiva>();
+   // private ArrayList<Locomotiva> locomotivas = new ArrayList<Locomotiva>();
 
     // Armazena o número de carros
     private ArrayList<Carro> carros = new ArrayList<Carro>();
@@ -137,9 +137,9 @@ public class Composicao {
      * Engata uma locomotiva na composição
      * @param locomotiva Locomotiva a ser engatada
      * @param garagem Garagem na qual a locomotiva sera removida
-     * author joao.farah@edu.pucrs.br, l.gamarra@edu.pucrs.br
+     * author joao.farah@edu.pucrs.br, l.gamarra@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
      */
-    public void engataLocomotiva(Locomotiva locomotiva, GaragemLocomotivas garagem)
+    public void engata(Locomotiva locomotiva, GaragemLocomotivas garagem)
     {
         // Troca o estado da locomotiva para em uso(1)
         locomotiva.setComposicao(1);
@@ -159,7 +159,7 @@ public class Composicao {
 
     /**
      * Calcula a capacidade real da composição dependendo da quantidade de locomotivas engatadas
-     * @author l.gamarra@edu.pucrs.br
+     * @author l.gamarra@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
      */
     public void calcularCapacidadeReal()
     {
@@ -167,13 +167,13 @@ public class Composicao {
         maxVagoesReal = maxVagoes;
 
         // No caso da composição utilizar mais de uma locomotiva, é necessário calcular suas capacidades reais
-        if (locomotivas.size() > 1)
+        if (getQtdadeLocomotivas() > 1)
         {
             // Calcula a capacidade de peso máxima a partir da quantidade de locomotivas
-            maxPesoReal = maxPeso - (maxPeso / 100 * ((locomotivas.size() - 1) * 10));
+            maxPesoReal = maxPeso - (maxPeso / 100 * ((getQtdadeLocomotivas() - 1) * 10));
 
             // Calcula a quantidade máxima de vagões a partir da quantidade de locomotivas
-            maxVagoesReal = (int) Math.floor(maxVagoes - (maxVagoes / 100.0 * ((locomotivas.size() - 1) * 10)));
+            maxVagoesReal = (int) Math.floor(maxVagoes - (maxVagoes / 100.0 * ((getQtdadeLocomotivas()- 1) * 10)));
         }
     }
 
@@ -181,9 +181,9 @@ public class Composicao {
      * engata um vagão na composição
      * @param vagao Vagão a ser engatado
      * @param garagem Garagem na qual o vagao sera removido
-     * author joao.farah@edu.pucrs.br, l.gamarra@edu.pucrs.br
+     * author joao.farah@edu.pucrs.br, l.gamarra@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
      */
-    public void engataVagao(Vagao vagao, GaragemVagoes garagem)
+    public void engata(Vagao vagao, GaragemVagoes garagem)
     {
         // Troca o estado do vagão para em uso(1)
         vagao.setComposicao(1);
@@ -201,40 +201,71 @@ public class Composicao {
     /**
      * Desengata a ultima locomotiva engatada na composicao
      * @param garagem Garagem em que a locomotiva sera armazenada
-     * @author joao.farah@edu.pucrs.br, l.gamarra@edu.pucrs.br
+     * @author ricardo.rossa@edu.pucrs.br, joao.farah@edu.pucrs.br, l.gamarra@edu.pucrs.br
      */
-    public void desengataLocomotiva(GaragemLocomotivas garagem)
+    public void desengata(GaragemLocomotivas garagem)
     {
         // Troca o estado da locomotiva para disponível(0)
-        locomotivas.get(locomotivas.size() - 1).setComposicao(0);
+        int i = 1;
 
+        Locomotiva l = null;
+       for(Carro c: carros)
+       {
+           c = carros.get(carros.size() - i);
+           if(c instanceof Locomotiva)
+           {
+               c.setComposicao(0);
+               l = (Locomotiva) c;
+           }
+           else
+           {
+               i++;
+           }
+       }
         // Adiciona a locomotiva a garagem
-        garagem.setLocomotiva(locomotivas.get(locomotivas.size() - 1));
+        garagem.setLocomotiva(l);
 
         // Altera a capacidade da composição
-        maxPeso -= locomotivas.get(locomotivas.size() - 1).getPesoMax();
-        maxVagoes -= locomotivas.get(locomotivas.size() - 1).getQtdadeMaxVagoes();
+        assert l != null;
+        maxPeso -= l.getPesoMax();
+        maxVagoes -= l.getQtdadeMaxVagoes();
 
         // Remove a locomotiva da composição
-        locomotivas.remove(locomotivas.size() - 1);
+       carros.remove(l);
     }
 
     /**
      * desengata o ultimo vagão engatado na composição
      * @param garagem Garagem que o vagao será armazenado
-     * @author joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br, l.gamarra@edu.pucrs.br
+     * @author  ricardo.rossa@edu.pucrs.br, joao.farah@edu.pucrs.br, l.gamarra@edu.pucrs.br
      */
-    public void desengataVagao(GaragemVagoes garagem) {
+    public void desengata(GaragemVagoes garagem) {
+
         // Troca o estado do vagão para disponível(0)
-        vagoes.get(vagoes.size() - 1).setComposicao(0);
+        int i = 1;
+        Vagao v = null;
+        for(Carro c: carros)
+        {
+            c = carros.get(carros.size() - i);
+            if(c instanceof Vagao)
+            {
+                c.setComposicao(0);
+                v = (Vagao) c;
+            }
+            else
+            {
+                i++;
+            }
+        }
 
         // Adiciona o vagão a garagem
-        garagem.setVagao(vagoes.get(vagoes.size() - 1));
+        garagem.setVagao(v);
 
         // Remove o seu peso da composição
-        pesoAtual -= vagoes.get(vagoes.size() - 1).getCapacidadeCarga();
+        assert v != null;
+        pesoAtual -= v.getCapacidadeCarga();
 
         // Remove o vagão da composicao (último vagao)
-        vagoes.remove(vagoes.size() - 1);
+       carros.remove(v);
     }
 }
