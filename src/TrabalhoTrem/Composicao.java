@@ -14,7 +14,7 @@ public class Composicao {
     //private ArrayList<Vagao> vagoes = new ArrayList<Vagao>();
 
     //Armazena o número de locomotivas
-   // private ArrayList<Locomotiva> locomotivas = new ArrayList<Locomotiva>();
+    // private ArrayList<Locomotiva> locomotivas = new ArrayList<Locomotiva>();
 
     // Armazena o número de carros
     private ArrayList<Carro> carros = new ArrayList<Carro>();
@@ -34,24 +34,24 @@ public class Composicao {
 
     /**
      * Construtor vazio da classe Composição
+     *
      * @author joao.farah@edu.pucrs.br
      */
-    public Composicao()
-    {
+    public Composicao() {
         id = 0;
     }
 
     /**
      * Construtor da classe Composição
      * Este construtor lança uma exceção IDJaEmUsoException
-     * @param id número de identificação da composição
+     *
+     * @param id    número de identificação da composição
      * @param patio patio de composições para poder selecionar o patio onde está a composição
      * @throws IDJaEmUsoException se o ID já estiver em uso
      * @author ricardo.rossa@edu.pucrs.br, joao.farah@edu.pucrs.br
      */
-    public Composicao(int id, PatioComposicoes patio) throws IDJaEmUsoException
-    {
-        if(patio.tremExiste(id)) {
+    public Composicao(int id, PatioComposicoes patio) throws IDJaEmUsoException {
+        if (patio.tremExiste(id)) {
             throw new IDJaEmUsoException("ID EM USO, ESCOLHA OUTRO ID PARA O TREM!");
         }
         // Somente atribui-se o valor do ID a composição caso a exceção não seja lançada
@@ -61,56 +61,65 @@ public class Composicao {
 
     /**
      * Retorna a capacidade máxima de peso real da composição
+     *
      * @return A capacidade máxima de peso real da composição
      * @author l.gamarra@edu.pucrs.br
      */
-    public double getMaxPesoReal()
-    {
+    public double getMaxPesoReal() {
         return maxPesoReal;
     }
 
     /**
      * Retorna a quantidade máxima de vagões real da composição
+     *
      * @return A quantidade máxima de vagões real da composição
      * @author l.gamarra@edu.pucrs.br
      */
-    public int getMaxVagoesReal()
-    {
+    public int getMaxVagoesReal() {
         return maxVagoesReal;
     }
 
     /**
      * Retorna o peso atual da composição
+     *
      * @return O peso atual da composição
      * @author l.gamarra@edu.pucrs.br
      */
-    public double getPesoAtual()
-    {
+    public double getPesoAtual() {
         return pesoAtual;
     }
 
     /**
      * retorna o identificador da composição
+     *
      * @return id da composição
      * @author joao.farah@edu.pucrs.br
      */
-    public int getIdentificador()
-    {
+    public int getIdentificador() {
         return id;
     }
 
     /**
+     * retorna o identificador da composição
+     *
+     * @return id da composição
+     * @author joao.farah@edu.pucrs.br
+     */
+    public int setIdentificador(int n) {
+        n = id;
+        return n;
+    }
+
+    /**
      * Retorna a quantidade de locomotivas
+     *
      * @return quantidade de locomotivas
      * @author ricardo.rossa@edu.pucrs.br
      */
-    public int getQtdadeLocomotivas()
-    {
+    public int getQtdadeLocomotivas() {
         int quant = 0;
-        for(Carro c : carros)
-        {
-            if(c instanceof Locomotiva)
-            {
+        for (Carro c : carros) {
+            if (c instanceof Locomotiva) {
                 quant++;
             }
         }
@@ -119,15 +128,14 @@ public class Composicao {
 
     /**
      * Retorna a quantidade de vagões
+     *
      * @return quantidade de vagões
      * @author joao.farah@edu.pucrs.br
      */
-    public int getQtdadeVagoes()
-    {
+    public int getQtdadeVagoes() {
         int quant = 0;
-        for(Carro c : carros)
-            if(c instanceof Vagao)
-            {
+        for (Carro c : carros)
+            if (c instanceof Vagao) {
                 quant++;
             }
         return quant;
@@ -135,12 +143,12 @@ public class Composicao {
 
     /**
      * Engata uma locomotiva na composição
+     *
      * @param locomotiva Locomotiva a ser engatada
-     * @param garagem Garagem na qual a locomotiva sera removida
-     * author joao.farah@edu.pucrs.br, l.gamarra@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+     * @param garagem    Garagem na qual a locomotiva sera removida
+     *                   author joao.farah@edu.pucrs.br, l.gamarra@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
      */
-    public void engata(Locomotiva locomotiva, GaragemLocomotivas garagem)
-    {
+    public void engata(Locomotiva locomotiva, GaragemLocomotivas garagem) {
         // Troca o estado da locomotiva para em uso(1)
         locomotiva.setComposicao(1);
 
@@ -157,34 +165,47 @@ public class Composicao {
         garagem.removeLocomotiva(locomotiva);
     }
 
+    public void engata(Locomotiva locomotiva) {
+        // Troca o estado da locomotiva para em uso(1)
+        locomotiva.setComposicao(1);
+
+        // Adiciona locomotiva a composição
+        carros.add(locomotiva);
+
+        // Incrementa a capacidade de peso do trem
+        maxPeso += locomotiva.getPesoMax();
+
+        // Incrementa a capacidade de vagões do trem
+        maxVagoes += locomotiva.getQtdadeMaxVagoes();
+    }
+
     /**
      * Calcula a capacidade real da composição dependendo da quantidade de locomotivas engatadas
+     *
      * @author l.gamarra@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
      */
-    public void calcularCapacidadeReal()
-    {
+    public void calcularCapacidadeReal() {
         maxPesoReal = maxPeso;
         maxVagoesReal = maxVagoes;
 
         // No caso da composição utilizar mais de uma locomotiva, é necessário calcular suas capacidades reais
-        if (getQtdadeLocomotivas() > 1)
-        {
+        if (getQtdadeLocomotivas() > 1) {
             // Calcula a capacidade de peso máxima a partir da quantidade de locomotivas
             maxPesoReal = maxPeso - (maxPeso / 100 * ((getQtdadeLocomotivas() - 1) * 10));
 
             // Calcula a quantidade máxima de vagões a partir da quantidade de locomotivas
-            maxVagoesReal = (int) Math.floor(maxVagoes - (maxVagoes / 100.0 * ((getQtdadeLocomotivas()- 1) * 10)));
+            maxVagoesReal = (int) Math.floor(maxVagoes - (maxVagoes / 100.0 * ((getQtdadeLocomotivas() - 1) * 10)));
         }
     }
 
     /**
      * engata um vagão na composição
-     * @param vagao Vagão a ser engatado
+     *
+     * @param vagao   Vagão a ser engatado
      * @param garagem Garagem na qual o vagao sera removido
-     * author joao.farah@edu.pucrs.br, l.gamarra@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+     *                author joao.farah@edu.pucrs.br, l.gamarra@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
      */
-    public void engata(Vagao vagao, GaragemVagoes garagem)
-    {
+    public void engata(Vagao vagao, GaragemVagoes garagem) {
         // Troca o estado do vagão para em uso(1)
         vagao.setComposicao(1);
 
@@ -196,6 +217,18 @@ public class Composicao {
 
         // Remove o vagão da garagem
         garagem.removeVagao(vagao);
+    }
+
+    public void engata(Vagao vagao) {
+        // Troca o estado do vagão para em uso(1)
+        vagao.setComposicao(1);
+
+        // Adiciona o peso do vagão a composição
+        pesoAtual += vagao.getCapacidadeCarga();
+
+        // Adiciona o vagão a composição
+        carros.add(vagao);
+
     }
 
     /**
@@ -268,4 +301,22 @@ public class Composicao {
         // Remove o vagão da composicao (último vagao)
        carros.remove(v);
     }
+
+    /**
+     * Retorna o carro na posição N
+     * @param n - carro no index N
+     * @return carro na N
+     * @author joao.farah@edu.pucrs.br
+     */
+    public Carro getCarro(int n)
+    {
+        return carros.get(n);
+    }
+
+    /**
+     * Retorna a quantidade de carros
+     * @return quantidade de carros
+     * @author joao.farah@edu.pucrs.br
+     */
+    public int getQtdadeCarros(){return carros.size();}
 }

@@ -1,12 +1,10 @@
 package TrabalhoTrem;
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
-import java.io.IOException;
-import java.io.BufferedReader;
 
 /**
  *  Principal classe do programa
@@ -45,13 +43,15 @@ public class App {
         // Define o Path de onde será carregado as locomotivas e os vagões
         String diretorioAtual = Paths.get("").toAbsolutePath().toString();
         String separadorArquivos = File.separator;
-        Path vagoesCSV = Paths.get(diretorioAtual + separadorArquivos + "src" + separadorArquivos + "TrabalhoTrem" + separadorArquivos + "vagoes.csv");
-        Path locomotivasCSV = Paths.get(diretorioAtual + separadorArquivos + "src" + separadorArquivos + "TrabalhoTrem" + separadorArquivos + "locomotivas.csv");
-
+        Path vagoesCSV = Paths.get(diretorioAtual + separadorArquivos + "src" + separadorArquivos + "TrabalhoTrem" + separadorArquivos + "vag.csv");
+        Path locomotivasCSV = Paths.get(diretorioAtual + separadorArquivos + "src" + separadorArquivos + "TrabalhoTrem" + separadorArquivos + "loc.csv");
+        Path composicoesCSV = Paths.get(diretorioAtual + separadorArquivos + "src" + separadorArquivos + "TrabalhoTrem" + separadorArquivos + "comp.csv");
 
         // Realiza a leitura dos arquivos CSV Vagões e Locomotiva e armazena os armazena em sua respectiva garagem
         lerVagoes(vagoesCSV, garagemVagoes);
         lerLocomotivas(locomotivasCSV, garagemLocomotivas);
+        lerComposicoes(composicoesCSV, patioComposicoes);
+
 
         // Recebe inputs do usuário
         int userIn;
@@ -316,6 +316,11 @@ public class App {
                     patioComposicoes.deletarComposicao(trem);
 
                     System.out.println("A composição foi excluída! Locomotivas e vagões retornaram a suas respectivas garagens.");
+
+                case 05:
+                    salvar("loc.csv", salvar(garagemLocomotivas));
+                    salvar("vag.csv", salvar(garagemVagoes));
+                    salvar("comp.csv", salvar(patioComposicoes));
             }
         } while (userIn != 5);
     }
@@ -548,6 +553,7 @@ public static void lerVagoes(Path vagoesCSV, GaragemVagoes garagemVagoes)
     }
 }
 
+
     public static void lerLocomotivas(Path locomotivasCSV, GaragemLocomotivas garagemLocomotivas)
     {
         try(BufferedReader br = Files.newBufferedReader(locomotivasCSV))
@@ -561,7 +567,6 @@ public static void lerVagoes(Path vagoesCSV, GaragemVagoes garagemVagoes)
                     int id = Integer.parseInt(partes[0].trim());
                     double pesoMax = Double.parseDouble(partes[1].trim());
                     int quantMaxVagoes = Integer.parseInt(partes[2].trim());
-                    int a = quantMaxVagoes;
                     Locomotiva locom = new Locomotiva(id,pesoMax,quantMaxVagoes);
                     garagemLocomotivas.setLocomotiva(locom);
                 }
@@ -573,6 +578,165 @@ public static void lerVagoes(Path vagoesCSV, GaragemVagoes garagemVagoes)
         {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void lerComposicoes(Path path, PatioComposicoes patioComposicoes)
+    {
+        try(BufferedReader br = Files.newBufferedReader(path))
+        {
+
+            String line = "";
+            while( (line = br.readLine()) != null)
+            {
+                if(line.length() == 0)
+                    break;
+                Composicao c;
+                try {
+                    c = new Composicao(Integer.parseInt(line.substring(0, line.length() - 1)), patioComposicoes);
+                } catch (IDJaEmUsoException e) {
+                    throw new RuntimeException(e);
+                }
+
+                while( !(line = br.readLine()).equals(""))
+                {
+                    String[] partes = line.split("," , 4);
+                    if(partes.length == 4)
+                    {
+                        int id = Integer.parseInt(partes[0].trim());
+                        double pesoMax = Double.parseDouble(partes[1].trim());
+                        int quantMaxVagoes = Integer.parseInt(partes[2].trim());
+                        Locomotiva locom = new Locomotiva(id,pesoMax,quantMaxVagoes);
+                        c.engata(locom);
+                    }
+                }
+
+                while( !(line = br.readLine()).equals(""))
+                {
+                    String[] partes = line.split("," , 3);
+                    if(partes.length == 3)
+                    {
+                        int codigo = Integer.parseInt(partes[0].trim());
+                        double maxCarga = Double.parseDouble(partes[1].trim());
+                        Vagao vag = new Vagao(codigo, maxCarga, 0);
+                        c.engata(vag);
+                    }
+                }
+                c.calcularCapacidadeReal();
+                patioComposicoes.setComposicao(c);
+            }
+
+        }
+        catch(IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void salvar(String fileName, String print)
+    {
+        String separador = File.separator;
+        String currDir = Paths.get("").toAbsolutePath().toString();
+        String fileComplete = currDir + separador + "src" + separador + "TrabalhoTrem" + separador;
+        String pathComplete = Paths.get(fileComplete).toString();
+        File a = new File(pathComplete, fileName);
+
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(a));
+            bw.write(print);
+            bw.flush();
+            bw.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String salvar(GaragemLocomotivas garagemLocomotivas)
+    {
+        String result = "";
+        for (int i = 0; i < garagemLocomotivas.totalLocomotivas(); i++) {
+            result += garagemLocomotivas.getLocomotiva(i).getIdentificador();
+            result += ", ";
+
+            result += garagemLocomotivas.getLocomotiva(i).getPesoMax();
+            result += ", ";
+
+            result += garagemLocomotivas.getLocomotiva(i).getQtdadeMaxVagoes();
+            result += ", ";
+            result += "\n";
+        }
+        return result;
+    }
+
+    public static String salvar(Locomotiva locomotiva)
+    {
+        String result = "";
+
+        result += locomotiva.getIdentificador();
+        result += ", ";
+
+        result += locomotiva.getPesoMax();
+        result += ", ";
+
+        result += locomotiva.getQtdadeMaxVagoes();
+        result += ", ";
+        result += "\n";
+
+        return result;
+    }
+
+    public static String salvar(GaragemVagoes garagemVagoes)
+    {
+        String res = "";
+        for (int i = 0; i < garagemVagoes.totalVagoes(); i++) {
+            res += (garagemVagoes.getVagao(i).getIdentificador());
+            res += ", ";
+
+            res+= garagemVagoes.getVagao(i).getCapacidadeCarga();
+            res += ", ";
+            res += "\n";
+        }
+        return res;
+    }
+
+    public static String salvar(Vagao vagao)
+    {
+        String res = "";
+
+        res += vagao.getIdentificador();
+        res += ", ";
+
+        res+= vagao.getCapacidadeCarga();
+        res += ", ";
+        res += "\n";
+
+        return res;
+    }
+
+    public static String salvar(PatioComposicoes trens)
+    {
+        String result = "";
+        for (int i = 0; i < trens.totalComposicoes(); i++)
+        {
+            result += trens.getComposicao(i).getIdentificador();
+
+            result += ",\n";
+
+
+            for (int k = 0; k < trens.getComposicao(i).getQtdadeLocomotivas(); k++)
+            {
+                result += salvar((Locomotiva) trens.getComposicao(i).getCarro(k));
+            }
+
+
+            result += "\n";
+            for (int k = trens.getComposicao(i).getQtdadeLocomotivas() ; k < trens.getComposicao(i).getQtdadeCarros(); k++)
+            {
+                result += salvar((Vagao) trens.getComposicao(i).getCarro(k));
+            }
+
+            result += "\n";
+        }
+        return result;
     }
 
 }
