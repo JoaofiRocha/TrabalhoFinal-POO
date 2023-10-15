@@ -1,11 +1,12 @@
 package TrabalhoTrem;
 import java.util.ArrayList;
+
 /**
- * classe Composição
- * @author joao.farah@edu.pucrs.br, l.gamarra@edu.pucrs.br
- * @version 02/09/2023
+ * Classe Composição
+ * @author joao.farah@edu.pucrs.br, l.gamarra@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+ * @version 15/10/2023
  */
-public class Composicao {
+public class Composicao implements Comparable<Composicao> {
 
     //Armazena o código identificador da composição
     private final int id;
@@ -100,8 +101,8 @@ public class Composicao {
     }
 
     /**
-     * retorna o identificador da composição
-     *
+     * Retorna o identificador da composição
+     * @param n - valor do ID
      * @return id da composição
      * @author joao.farah@edu.pucrs.br
      */
@@ -146,7 +147,7 @@ public class Composicao {
      *
      * @param locomotiva Locomotiva a ser engatada
      * @param garagem    Garagem na qual a locomotiva sera removida
-     *                   author joao.farah@edu.pucrs.br, l.gamarra@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+     * @author joao.farah@edu.pucrs.br, l.gamarra@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
      */
     public void engata(Locomotiva locomotiva, GaragemLocomotivas garagem) {
         // Troca o estado da locomotiva para em uso(1)
@@ -165,6 +166,12 @@ public class Composicao {
         garagem.removeLocomotiva(locomotiva);
     }
 
+    /**
+     * Engata uma locomotiva individual na composição
+     *
+     * @param locomotiva Locomotiva a ser engatada
+     * @author joao.farah@edu.pucrs.br, l.gamarra@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+     */
     public void engata(Locomotiva locomotiva) {
         // Troca o estado da locomotiva para em uso(1)
         locomotiva.setComposicao(1);
@@ -199,11 +206,11 @@ public class Composicao {
     }
 
     /**
-     * engata um vagão na composição
+     * Engata um vagão na composição
      *
      * @param vagao   Vagão a ser engatado
      * @param garagem Garagem na qual o vagao sera removido
-     *                author joao.farah@edu.pucrs.br, l.gamarra@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+     * @author joao.farah@edu.pucrs.br, l.gamarra@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
      */
     public void engata(Vagao vagao, GaragemVagoes garagem) {
         // Troca o estado do vagão para em uso(1)
@@ -219,6 +226,12 @@ public class Composicao {
         garagem.removeVagao(vagao);
     }
 
+    /**
+     * Engata um Vagao individual na composição
+     *
+     * @param vagao Vagao a ser engatado
+     * @author joao.farah@edu.pucrs.br, l.gamarra@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+     */
     public void engata(Vagao vagao) {
         // Troca o estado do vagão para em uso(1)
         vagao.setComposicao(1);
@@ -268,7 +281,7 @@ public class Composicao {
     }
 
     /**
-     * desengata o ultimo vagão engatado na composição
+     * Desengata o ultimo vagão engatado na composição
      * @param garagem Garagem que o vagao será armazenado
      * @author  ricardo.rossa@edu.pucrs.br, joao.farah@edu.pucrs.br, l.gamarra@edu.pucrs.br
      */
@@ -319,4 +332,17 @@ public class Composicao {
      * @author joao.farah@edu.pucrs.br
      */
     public int getQtdadeCarros(){return carros.size();}
+
+
+
+    /**
+     * CompareTo - Compara uma composicao com a outra por ID, assim habilitando o sort.
+     * @param outro o objeto a ser comparado.
+     * @return Integer.compare(this.getIdentificador(), outro.getIdentificador()) - comparacao por ID
+     * @author ricardo.rossa@edu.pucrs.br
+     */
+    public int compareTo(Composicao outro)
+    {
+        return Integer.compare(this.getIdentificador(), outro.getIdentificador());
+    }
 }

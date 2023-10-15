@@ -5,19 +5,28 @@ package TrabalhoTrem;
  * @author l.gamarra@edu.pucrs.br, ricardo.rossa@edu.pucrs.br, joao.farah@edu.pucrs.br
  */
 
-public abstract class Carro {
+public abstract class Carro implements Comparable<Carro>  {
 
-    // Armazena a identificação da locomotiva
+    // Armazena a identificação do carro
     private int id;
 
-    // Armazena a composição (estado) do vagão  -> em uso == 1 | livre == 0
+    // Armazena a composição (estado) do carro  -> em uso == 1 | livre == 0
     private int composicao;
 
+    /**
+     * Construtor Vazio para fins de Javadoc
+     */
     public Carro()
     {
 
     }
 
+    /**
+     * Construtor da Classe Carro
+     * @param id - id do carro
+     * @param composicao - estado do carro
+     * @author joao.farah@edu.pucrs.br
+     */
     public Carro (int id, int composicao)
     {
         this.id = id;
@@ -52,6 +61,19 @@ public abstract class Carro {
     public void setComposicao(int n)
     {
         composicao = n;
+    }
+
+    /**
+     * CompareTo customizado para ser possível ordernar Carros
+     * Compara um carro com o outro pelo ID.
+     * @param outro o objeto a ser comparado.
+     * @return Integer.compare(this.id, outro.getIdentificador()) - retorna a comparaçao por ID.
+     * @author ricarod.rossa@du.pucrs.br
+     */
+    @Override
+    public int compareTo(Carro outro)
+    {
+        return Integer.compare(this.id, outro.getIdentificador());
     }
 
 }

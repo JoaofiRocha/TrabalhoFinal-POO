@@ -1,9 +1,10 @@
 package TrabalhoTrem;
 import java.util.ArrayList;
+import java.util.Collections;
 /**
  * Classe da Garagem de Vagões
  * @author ricardo.rossa@edu.pucrs.br
- * @version 30/08/2023;
+ * @version 15/10/2023;
  */
 
 public class GaragemVagoes
@@ -25,6 +26,7 @@ public class GaragemVagoes
     {
         vagoes.add(vagao);
     }
+
 
     /**
      * Obtem um vagão que está armazenado na garagem
@@ -52,4 +54,13 @@ public class GaragemVagoes
      * @author ricardo.rossa@edu.pucrs.br
      */
     public void removeVagao(Vagao vagao) { vagoes.remove(vagao);}
+
+    /**
+     * Ordena os Vagoes utilizando o compareTo implementado na classe do objeto (Vagao)
+     * @author ricardo.rossa@edu.pucrs.br
+     */
+    public void sortVagoes()
+    {
+        Collections.sort(vagoes);
+    }
 }

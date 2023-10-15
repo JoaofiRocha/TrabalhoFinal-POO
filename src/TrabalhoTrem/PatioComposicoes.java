@@ -1,10 +1,11 @@
 package TrabalhoTrem;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
- * armazena objetos da classe Composicao
- * @author joao.farah@edu.pucrs.br, l.gamarra@edu.pucrs.br
- * @version 02/09/23
+ * Armazena objetos da classe Composicao
+ * @author joao.farah@edu.pucrs.br, l.gamarra@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+ * @version 15/10/23
  */
 public class PatioComposicoes
 {
@@ -86,5 +87,16 @@ public class PatioComposicoes
     {
         composicoes.remove(composicao);
     }
+
+
+    /**
+     * Ordena as composicoes utilizando o compareTo implementado na classe do objeto (Composicao)
+     * @author ricardo.rossa@edu.pucrs.br
+     */
+    public void sortComposicoes()
+    {
+        Collections.sort(composicoes);
+    }
+
 
 }

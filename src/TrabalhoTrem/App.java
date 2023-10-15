@@ -1,6 +1,7 @@
 package TrabalhoTrem;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -363,6 +364,7 @@ public class App {
      */
     public static void imprimirInfo(GaragemLocomotivas garagemLocomotivas)
     {
+        garagemLocomotivas.sortLocomotivas();
         System.out.println("          Locomotivas Disponíveis");
         System.out.println("   ID   |   Peso Máx.   |   Vagões Máx.  |");
         for (int i = 0; i < garagemLocomotivas.totalLocomotivas(); i++)
@@ -427,6 +429,7 @@ public class App {
      */
     public static void imprimirInfo(GaragemVagoes garagemVagoes)
     {
+        garagemVagoes.sortVagoes();
         System.out.println("       Vagões Disponíveis");
         System.out.println("   ID   |   Carga Máx.   |");
         for (int i = 0; i < garagemVagoes.totalVagoes(); i++)
@@ -449,6 +452,7 @@ public class App {
      */
     public static void imprimirInfo(PatioComposicoes trens)
     {
+        trens.sortComposicoes();
         System.out.println("          Composições Disponíveis");
         System.out.println("   ID   |   Quantidade de Locomotivas   |   Quantidade de Vagões   |   Peso do Trem   |");
         for (int i = 0; i < trens.totalComposicoes(); i++)
@@ -529,10 +533,24 @@ public class App {
         return 100;
     }
 
+    /**
+     * Método que realiza a leitura de um arquivo contendo Vagoes.
+      * @param vagoesCSV - path do arquivo.
+     * @param garagemVagoes - onde estao aramzenados os vagoes
+     * @author ricardo.rossa@edu.pucrs.br
+     */
 public static void lerVagoes(Path vagoesCSV, GaragemVagoes garagemVagoes)
 {
     try(BufferedReader br = Files.newBufferedReader(vagoesCSV))
     {
+        File file = vagoesCSV.toFile();
+
+        // Caso a File esteja vazia, automaticamente é gerado conteúdo.
+        if(file.length() == 0)
+        {
+            generateVagoes(garagemVagoes);
+        }
+
         String line = "";
         while( (line = br.readLine() ) != null)
         {
@@ -545,6 +563,7 @@ public static void lerVagoes(Path vagoesCSV, GaragemVagoes garagemVagoes)
                 garagemVagoes.setVagao(vag);
             }
         }
+
     }
 
     catch (IOException e)
@@ -554,10 +573,24 @@ public static void lerVagoes(Path vagoesCSV, GaragemVagoes garagemVagoes)
 }
 
 
+    /**
+     * Método que realiza a leitura de um arquivo contendo Locomotivas.
+     * @param locomotivasCSV - path do arquivo.
+     * @param garagemLocomotivas - onde estao armazenadas as locomotivas
+     * @author ricardo.rossa@edu.pucrs.br
+     */
     public static void lerLocomotivas(Path locomotivasCSV, GaragemLocomotivas garagemLocomotivas)
     {
         try(BufferedReader br = Files.newBufferedReader(locomotivasCSV))
         {
+            File file = locomotivasCSV.toFile();
+
+            // Caso a File esteja vazia, automaticamente é gerado conteúdo.
+            if(file.length() == 0)
+            {
+                generateLocomotivas(garagemLocomotivas);
+            }
+
             String line = "";
             while( (line = br.readLine()) != null)
             {
@@ -572,7 +605,6 @@ public static void lerVagoes(Path vagoesCSV, GaragemVagoes garagemVagoes)
                 }
             }
 
-
         }
         catch(IOException e)
         {
@@ -580,6 +612,12 @@ public static void lerVagoes(Path vagoesCSV, GaragemVagoes garagemVagoes)
         }
     }
 
+    /**
+     * Método que realiza a leitura de um arquivo contendo Composicoes.
+     * @param path - path do arquivo.
+     * @param patioComposicoes - onde estao armazenadas as composicoes
+     * @author l.gamarra@edu.pucrs.br, ricardo.rossa@edu.pucrs.br, joao.farah@edu.pucrs.br
+     */
     public static void lerComposicoes(Path path, PatioComposicoes patioComposicoes)
     {
         try(BufferedReader br = Files.newBufferedReader(path))
@@ -632,6 +670,12 @@ public static void lerVagoes(Path vagoesCSV, GaragemVagoes garagemVagoes)
         }
     }
 
+    /**
+     * Método que salva um arquivo recebido como input.
+     * @param fileName - nome do arquivo
+     * @param print - conteúdo a ser escrito no arquivo.
+     * @author l.gammara@edu.pucrs.br, joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+     */
     public static void salvar(String fileName, String print)
     {
         String separador = File.separator;
@@ -650,8 +694,15 @@ public static void lerVagoes(Path vagoesCSV, GaragemVagoes garagemVagoes)
         }
     }
 
+    /**
+     * Método utilizado dentro do método salvar para arquivos. Este método salva uma string formatada, contendo todas as locomotivas.
+     * @param garagemLocomotivas - onde estão aramzenadas as locomotivas
+     * @return result - String formatada de locomotivas.
+     * @author l.gammra@edu.pucrs.br, joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+     */
     public static String salvar(GaragemLocomotivas garagemLocomotivas)
     {
+        garagemLocomotivas.sortLocomotivas();
         String result = "";
         for (int i = 0; i < garagemLocomotivas.totalLocomotivas(); i++) {
             result += garagemLocomotivas.getLocomotiva(i).getIdentificador();
@@ -667,6 +718,12 @@ public static void lerVagoes(Path vagoesCSV, GaragemVagoes garagemVagoes)
         return result;
     }
 
+    /**
+     * Método utilizado dentro do método salvar para arquivos. Este método salva uma string formatada, contendo uma locomotiva.
+     * @param locomotiva  - locomotiva individual a ser salva
+     * @return result - String formatada da locomotiva.
+     * @author l.gammra@edu.pucrs.br, joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+     */
     public static String salvar(Locomotiva locomotiva)
     {
         String result = "";
@@ -683,9 +740,15 @@ public static void lerVagoes(Path vagoesCSV, GaragemVagoes garagemVagoes)
 
         return result;
     }
-
+    /**
+     * Método utilizado dentro do método salvar para arquivos. Este método salva uma string formatada, contendo todos os vagoes.
+     * @param garagemVagoes- onde estão aramzenados os Vagoes.
+     * @return result - String formatada de vagoes.
+     * @author l.gammra@edu.pucrs.br, joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+     */
     public static String salvar(GaragemVagoes garagemVagoes)
     {
+        garagemVagoes.sortVagoes();
         String res = "";
         for (int i = 0; i < garagemVagoes.totalVagoes(); i++) {
             res += (garagemVagoes.getVagao(i).getIdentificador());
@@ -698,6 +761,12 @@ public static void lerVagoes(Path vagoesCSV, GaragemVagoes garagemVagoes)
         return res;
     }
 
+    /**
+     * Método utilizado dentro do método salvar para arquivos. Este método salva uma string formatada, contendo um vagao.
+     * @param vagao - vagao individual a ser salvo
+     * @return result - String formatada do vagao
+     * @author l.gammra@edu.pucrs.br, joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+     */
     public static String salvar(Vagao vagao)
     {
         String res = "";
@@ -712,8 +781,15 @@ public static void lerVagoes(Path vagoesCSV, GaragemVagoes garagemVagoes)
         return res;
     }
 
+    /**
+     * Método utilizado dentro do método salvar para arquivos. Este método salva uma string formatada, contendo todas as composicoes.
+     * @param trens - onde estão aramzenadas as composicoes
+     * @return result - String formatada de composicoes
+     * @author l.gammra@edu.pucrs.br, joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+     */
     public static String salvar(PatioComposicoes trens)
     {
+        trens.sortComposicoes();
         String result = "";
         for (int i = 0; i < trens.totalComposicoes(); i++)
         {

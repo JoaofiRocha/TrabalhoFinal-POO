@@ -1,8 +1,8 @@
 package TrabalhoTrem;
 /**
  * Classe Locomotiva armazena dados das locomotivas
- * @author l.gamarra@edu.pucrs.br
- * @version 30/08/23
+ * @author l.gamarra@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+ * @version 15/10/23
  */
 
 public class Locomotiva extends Carro
@@ -54,5 +54,28 @@ public class Locomotiva extends Carro
     {
         return maxVagao;
     }
+
+
+    /**
+     * CompareTo que faz um Override na implementação da Classe Carro
+     * Compara uma locomotiva com a outra por ID, assim habilitando o sort.
+     * @param outro o objeto a ser comparado.
+     * @return super.compareTo(outro) - Caso o objeto não seja uma Locomotiva, é chamada o construtor pai.
+     * @author ricardo.rossa@edu.pucrs.br
+     */
+    @Override
+    public int compareTo(Carro outro)
+    {
+        if(outro instanceof Locomotiva)
+        {
+            return Integer.compare(this.getIdentificador(), outro.getIdentificador());
+        }
+        return super.compareTo(outro);
+    }
+
+
+
+
+
 }
 

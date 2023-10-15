@@ -2,7 +2,7 @@ package TrabalhoTrem;
 /**
  * Classe Vagão
  * @author ricardo.rossa@edu.pucrs.br
- * @version 30/08/23
+ * @version 15/10/23
  */
 public class Vagao extends Carro {
     // Armazena o valor de carga máxima suportado pelo vagão
@@ -51,6 +51,24 @@ public class Vagao extends Carro {
      */
     public double getCapacidadeCarga() {
         return cargaMaxima;
+    }
+
+
+    /**
+     * CompareTo que faz um Override na implementação da Classe Carro
+     * Compara um vagao com a outra por ID, assim habilitando o sort.
+     * @param outro o objeto a ser comparado.
+     * @return super.compareTo(outro) - Caso o objeto não seja uma Vagao, é chamada o construtor pai.
+     * @author ricardo.rossa@edu.pucrs.br
+     */
+    @Override
+    public int compareTo(Carro outro)
+    {
+        if(outro instanceof Vagao)
+        {
+            return Integer.compare(this.getIdentificador(), outro.getIdentificador());
+        }
+        return super.compareTo(outro);
     }
 
 }

@@ -1,10 +1,11 @@
 package TrabalhoTrem;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * A classe GaragemLocomotivas armazena objetos da classe Locomotiva
- * @author l.gamarra@edu.pucrs.br
- * @version 30/08/23
+ * @author l.gamarra@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+ * @version 15/10/23
  */
 public class GaragemLocomotivas
 {
@@ -56,5 +57,15 @@ public class GaragemLocomotivas
     public void removeLocomotiva(Locomotiva locomotiva)
     {
         locomotivas.remove(locomotiva);
+    }
+
+
+    /**
+     * Ordena as Locomotivas utilizando o compareTo implementado na classe do objeto (Locomotiva)
+     * @author ricardo.rossa@edu.pucrs.br
+     */
+    public void sortLocomotivas()
+    {
+        Collections.sort(locomotivas);
     }
 }
