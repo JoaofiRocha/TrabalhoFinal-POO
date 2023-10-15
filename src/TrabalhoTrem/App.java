@@ -542,6 +542,7 @@ public class App {
      */
     public static void lerVagoes(Path vagoesCSV, GaragemVagoes garagemVagoes)
     {
+        // Configura o arquivo a ser lido
         try(BufferedReader br = Files.newBufferedReader(vagoesCSV))
         {
             File file = vagoesCSV.toFile();
@@ -552,15 +553,28 @@ public class App {
                 generateVagoes(garagemVagoes);
             }
 
+            // Inicializa uma string vazia
             String line = "";
+
+            // Executa um loop até o final do arquivo
             while( (line = br.readLine() ) != null)
             {
+                // Separa o conteúdo lido em uma array de string separado por ","
                 String[] partes = line.split("," , 3);
+
+                // Confere se o procedimento foi concluído com êxito
                 if(partes.length == 3)
                 {
+                    // Carrega o código
                     int codigo = Integer.parseInt(partes[0].trim());
+
+                    // Carrega a carga máx.
                     double maxCarga = Double.parseDouble(partes[1].trim());
+
+                    // Inicializa um vagão com os dados informados
                     Vagao vag = new Vagao(codigo, maxCarga, 0);
+
+                    // Salva o vagão na garagem
                     garagemVagoes.setVagao(vag);
                 }
             }
@@ -580,6 +594,7 @@ public class App {
      */
     public static void lerLocomotivas(Path locomotivasCSV, GaragemLocomotivas garagemLocomotivas)
     {
+        // Configura o arquivo a ser lido
         try(BufferedReader br = Files.newBufferedReader(locomotivasCSV))
         {
             File file = locomotivasCSV.toFile();
@@ -590,16 +605,31 @@ public class App {
                 generateLocomotivas(garagemLocomotivas);
             }
 
+            // Inicializa uma string vazia
             String line = "";
+
+            // Executa um loop até o final do arquivo
             while( (line = br.readLine()) != null)
             {
+                // Separa o conteúdo lido em uma array de string separado por ","
                 String[] partes = line.split("," , 4);
+
+                // Confere se o procedimento foi concluído com êxito
                 if(partes.length == 4)
                 {
+                    // Carrega o código
                     int id = Integer.parseInt(partes[0].trim());
+
+                    // Carrega o peso máx.
                     double pesoMax = Double.parseDouble(partes[1].trim());
+
+                    // Carrega a quantidade máx. de vagões
                     int quantMaxVagoes = Integer.parseInt(partes[2].trim());
+
+                    // Inicializa uma locomotiva com os dados informados
                     Locomotiva locom = new Locomotiva(id,pesoMax,quantMaxVagoes);
+
+                    // Salva a locomotiva na garagem
                     garagemLocomotivas.setLocomotiva(locom);
                 }
             }
@@ -619,46 +649,82 @@ public class App {
      */
     public static void lerComposicoes(Path path, PatioComposicoes patioComposicoes)
     {
+        // Configura o arquivo a ser lido
         try(BufferedReader br = Files.newBufferedReader(path))
         {
 
+            // Inicializa uma string vazia
             String line = "";
+
+            // Enquanto a linha lida for diferente de "null", inicializa uma nova composição
             while( (line = br.readLine()) != null)
             {
+                // Caso a linha tenha tamanho == 0, cancela o loop
                 if(line.length() == 0)
                     break;
+
+                // Declara uma nova composição
                 Composicao c;
+
                 try {
+                    // Inicializa a composição utilizando o "id" lido do arquivo, e a armazena no pátio
                     c = new Composicao(Integer.parseInt(line.substring(0, line.length() - 1)), patioComposicoes);
                 } catch (IDJaEmUsoException e) {
                     throw new RuntimeException(e);
                 }
 
+                // Enquanto a linha não for vazia(""), inicializa uma nova locomotiva
                 while( !(line = br.readLine()).equals(""))
                 {
+                    // Separa o conteúdo lido em uma array de string separado por ","
                     String[] partes = line.split("," , 4);
+
+                    // Confere se o procedimento foi concluído com êxito
                     if(partes.length == 4)
                     {
+                        // Carrega o código
                         int id = Integer.parseInt(partes[0].trim());
+
+                        // Carrega o peso máx.
                         double pesoMax = Double.parseDouble(partes[1].trim());
+
+                        // Carrega a quantidade máx. de vagões
                         int quantMaxVagoes = Integer.parseInt(partes[2].trim());
+
+                        // Inicializa a locomotiva com os dados lidos
                         Locomotiva locom = new Locomotiva(id,pesoMax,quantMaxVagoes);
+
+                        // Engata a locomotiva na composição
                         c.engata(locom);
                     }
                 }
 
+                // Enquanto a linha não for vazia(""), inicializa um novo vagão
                 while( !(line = br.readLine()).equals(""))
                 {
+                    // Separa o conteúdo lido em uma array de string separado por ","
                     String[] partes = line.split("," , 3);
+
+                    // Confere se o procedimento foi concluído com êxito
                     if(partes.length == 3)
                     {
+                        // Carrega o código
                         int codigo = Integer.parseInt(partes[0].trim());
+
+                        // Carrega a carga máx.
                         double maxCarga = Double.parseDouble(partes[1].trim());
+
+                        // Inicializa o vagão através dos dados lidos
                         Vagao vag = new Vagao(codigo, maxCarga, 0);
+
+                        // Engata o vagão na composição
                         c.engata(vag);
                     }
                 }
+                // Calcula a capacidade real da composição
                 c.calcularCapacidadeReal();
+
+                // Armazena a composição no pátio
                 patioComposicoes.setComposicao(c);
             }
 
@@ -714,11 +780,18 @@ public class App {
      */
     public static String salvar(GaragemLocomotivas garagemLocomotivas)
     {
+        // Organiza as locomotivas na garagem
         garagemLocomotivas.sortLocomotivas();
+
+        // Inicializa uma string vazia
         String result = "";
+
+        // Concatena dados de cada umas das locomotivas armazenadas
         for (int i = 0; i < garagemLocomotivas.totalLocomotivas(); i++) {
             result += salvar(garagemLocomotivas.getLocomotiva(i));
         }
+
+        // Retorna result
         return result;
     }
 
@@ -730,18 +803,23 @@ public class App {
      */
     public static String salvar(Locomotiva locomotiva)
     {
+        // Inicializa uma string vazia
         String result = "";
 
+        // Concatena o identificador da locomotiva seguido de ","
         result += locomotiva.getIdentificador();
         result += ", ";
 
+        // Concatena o peso máx. da locomotiva seguido de ","
         result += locomotiva.getPesoMax();
         result += ", ";
 
+        // Concatena a quantidade máx. de vagões da locomotiva seguido de ","
         result += locomotiva.getQtdadeMaxVagoes();
         result += ", ";
         result += "\n";
 
+        // Retorna result
         return result;
     }
     /**
@@ -752,11 +830,18 @@ public class App {
      */
     public static String salvar(GaragemVagoes garagemVagoes)
     {
+        // Organiza os vagões na garagem
         garagemVagoes.sortVagoes();
+
+        // Inicializa uma string vazia
         String res = "";
+
+        // Concatena dados de cada um dos vagões armazenados
         for (int i = 0; i < garagemVagoes.totalVagoes(); i++) {
             res += salvar(garagemVagoes.getVagao(i));
         }
+
+        // Retorna result
         return res;
     }
 
@@ -768,15 +853,19 @@ public class App {
      */
     public static String salvar(Vagao vagao)
     {
+        // Inicializa uma string vazia
         String res = "";
 
+        // Concatena o identificador do vagão seguido de ","
         res += vagao.getIdentificador();
         res += ", ";
 
+        // Concatena a capacidade de carga do vagão seguido de ","
         res+= vagao.getCapacidadeCarga();
         res += ", ";
         res += "\n";
 
+        // Retorna result
         return res;
     }
 
@@ -788,29 +877,40 @@ public class App {
      */
     public static String salvar(PatioComposicoes trens)
     {
+        // Organiza as composições no pátio
         trens.sortComposicoes();
+
+        // Inicializa uma string vazia
         String result = "";
+
+        // Concatena dados de cada umas das composições armazenadas
         for (int i = 0; i < trens.totalComposicoes(); i++)
         {
+            // Concatena o identificador da composição
             result += trens.getComposicao(i).getIdentificador();
 
+            // Concatena uma "," e quebra a linha
             result += ",\n";
 
-
+            // Concatena dados de cada uma das locomotivas da composição
             for (int k = 0; k < trens.getComposicao(i).getQtdadeLocomotivas(); k++)
             {
+                // Concatena dados das locomotivas
                 result += salvar((Locomotiva) trens.getComposicao(i).getCarro(k));
             }
-
-
+            // Quebra a linha
             result += "\n";
+
+            // Concatena dados de todos os vagões da composição
             for (int k = trens.getComposicao(i).getQtdadeLocomotivas() ; k < trens.getComposicao(i).getQtdadeCarros(); k++)
             {
+                // Concatena dados de vagões
                 result += salvar((Vagao) trens.getComposicao(i).getCarro(k));
             }
-
+            // Quebra a linha
             result += "\n";
         }
+        // Retorna result
         return result;
     }
 
