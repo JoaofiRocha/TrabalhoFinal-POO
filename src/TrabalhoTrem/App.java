@@ -10,7 +10,7 @@ import java.nio.file.Files;
 /**
  *  Principal classe do programa
  * @author l.gamarra@edu.pucrs.br, joao.farah@edu.pucrs.br, @ricardo.rossa@edu.pucrs.br
- * @version 05/09/23
+ * @version 15/10/23
  */
 public class App {
     /**
@@ -449,13 +449,13 @@ public class App {
     /**
      * Este método é utilizado para imprimir todas os trens criados que foram armazenados no patio.
      * @param trens Local onde os trens estão armazenadas
-     * @author joao.farah@edu.pucrs.br
+     * @author joao.farah@edu.pucrs.br, l.gamarra@edu.pucrs.br
      */
     public static void imprimirInfo(PatioComposicoes trens)
     {
         trens.sortComposicoes();
-        System.out.println("          Composições Disponíveis");
-        System.out.println("   ID   |   Quantidade de Locomotivas   |   Quantidade de Vagões   |   Peso do Trem   |");
+        System.out.println("          Composições Disponíveis (\u001B[35mLocomotivas\u001B[0m e \u001B[36mVagões\u001B[0m)");
+        System.out.println("   ID   |   Quantidade de Locomotivas   |   Quantidade de Vagões   |   Peso do Trem   |   Visualização da Composição");
         for (int i = 0; i < trens.totalComposicoes(); i++)
         {
             System.out.print(trens.getComposicao(i).getIdentificador());
@@ -472,7 +472,35 @@ public class App {
 
             System.out.print(trens.getComposicao(i).getPesoAtual());
             imprimirEspaços(calcularEspaços(18, String.valueOf(trens.getComposicao(i).getPesoAtual()).length()));
-            System.out.println("|");
+            System.out.print("|");
+
+            // Inicializa strings com valores de cores
+            String reset = "\u001B[0m";
+            String purple = "\u001B[35m";
+            String cyan = "\u001B[36m";
+
+            // Inicializa uma string vazia
+            String print = "";
+
+            // Identifica cada carro da composição
+            for (int k = 0; k < trens.getComposicao(i).getQtdadeCarros(); k++)
+            {
+
+                // Caso o carro seja uma locomotiva
+                if (trens.getComposicao(i).getCarro(k) instanceof Locomotiva)
+                    print += purple + "L" + trens.getComposicao(i).getCarro(k).getIdentificador() + reset;
+
+                // Caso o carro seja um vagão
+                else
+                    print += cyan + "V" + trens.getComposicao(i).getCarro(k).getIdentificador() + reset;
+
+                // Caso não seja o último elemento é preciso concatenar a ligação
+                if (k < trens.getComposicao(i).getQtdadeCarros() - 1)
+                    print += "---";
+            }
+            // Imprime a visualização
+            System.out.println(print);
+
         }
 
     }
