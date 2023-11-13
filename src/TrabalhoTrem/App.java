@@ -1,4 +1,5 @@
 package TrabalhoTrem;
+import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,6 +25,11 @@ public class App {
      * @param args  não utilizado
      */
     public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            UI ui = new UI();
+            ui.createAndShow();
+        });
+
         Scanner in = new Scanner(System.in);
 
         // Inicializa a garagem para locomotivas
