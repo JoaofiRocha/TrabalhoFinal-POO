@@ -13,18 +13,21 @@ import java.nio.file.Files;
  * @author l.gamarra@edu.pucrs.br, joao.farah@edu.pucrs.br, @ricardo.rossa@edu.pucrs.br
  * @version 15/10/23
  */
-public class App {
+public class App{
     /**
      * Construtor Vazio da classe App (Para Javadoc)
+     *
      * @author ricardo.rossa@edu.pucrs.br
      */
-    public App() {}
+    public App(){
+    }
 
     /**
      * Classe Main que executa as instruções que compõem o programa
-     * @param args  não utilizado
+     *
+     * @param args não utilizado
      */
-    public static void main(String[] args) {
+    public static void main(String[] args){
         SwingUtilities.invokeLater(() -> {
             UI ui = new UI();
             ui.createAndShow();
@@ -79,7 +82,7 @@ public class App {
                     boolean idValido = false;
 
                     // Enquanto o ID for invalido, o loop continua executando
-                    while(!idValido) {
+                    while (!idValido) {
                         // Aqui se tenta criar um trem, que ja foi inicializado fora deste bloco como null
                         // Caso obtenha-se um idValido, o trem é criado e saímos da exceção
                         try {
@@ -87,7 +90,7 @@ public class App {
                             idValido = true;
                             System.out.println("Trem criado com sucesso!");
                             System.out.println();
-                        // Caso o ID seja inválido, é lançada a exceção que pede para o usuário colocar um novo ID!
+                            // Caso o ID seja inválido, é lançada a exceção que pede para o usuário colocar um novo ID!
                         } catch (IDJaEmUsoException e) {
                             System.out.println(e.getMessage());
                             idTrem = in.nextInt();
@@ -103,14 +106,10 @@ public class App {
                         System.out.print("Insira o ID da locomotiva desejada: ");
                         int id = in.nextInt();
                         int posicao = findLocomotiva(id, garagemLocomotivas);
-                        if (posicao == 100)
-                        {
+                        if (posicao == 100) {
                             System.out.println("O ID fornecido não existe!");
                             n = 1;
-                        }
-
-                        else
-                        {
+                        } else {
                             trem.engata(garagemLocomotivas.getLocomotiva(posicao), garagemLocomotivas);
                             System.out.println("Locomotiva acoplada com sucesso!");
                             System.out.print("Gostaria de selecionar outra locomotiva? Sim(1) / Não(2)");
@@ -125,29 +124,21 @@ public class App {
 
                     // Permite engatar vagões
 
-                    do
-                    {
+                    do {
                         System.out.println("VAGÕES DISPONÍVEIS:");
                         imprimirInfo(garagemVagoes);
                         System.out.println("Peso Disponível: " + (trem.getMaxPesoReal() - trem.getPesoAtual()) + " | Vagões Disponíveis: " + (trem.getMaxVagoesReal() - trem.getQtdadeVagoes()));
                         System.out.print("Insira o ID do vagão desejado: ");
                         int id = in.nextInt();
                         int posicao = findVagao(id, garagemVagoes);
-                        if (posicao == 100)
-                        {
+                        if (posicao == 100) {
                             System.out.println("O ID fornecido não existe!");
                             n = 1;
-                        }
-
-                        else
-                        {
-                            if (trem.getMaxPesoReal() - (trem.getPesoAtual() + garagemVagoes.getVagao(posicao).getCapacidadeCarga()) <= 0 || trem.getMaxVagoesReal() - trem.getQtdadeVagoes() == 0)
-                            {
+                        } else {
+                            if (trem.getMaxPesoReal() - (trem.getPesoAtual() + garagemVagoes.getVagao(posicao).getCapacidadeCarga()) <= 0 || trem.getMaxVagoesReal() - trem.getQtdadeVagoes() == 0) {
                                 System.out.println("Não é possível adicionar mais vagões!");
                                 n = 2;
-                            }
-                            else
-                            {
+                            } else {
                                 trem.engata(garagemVagoes.getVagao(posicao), garagemVagoes);
                                 System.out.println("Vagão acoplado com sucesso!");
                                 System.out.print("Gostaria de selecionar outro vagão? Sim(1) / Não(2)");
@@ -165,8 +156,7 @@ public class App {
 
                     // Permite ao usuário escolher o trem a ser editado
 
-                    if (patioComposicoes.totalComposicoes() == 0)
-                    {
+                    if (patioComposicoes.totalComposicoes() == 0) {
                         System.out.println("Não existem composições para editar!");
                         break;
                     }
@@ -186,10 +176,8 @@ public class App {
                         // Apresenta diversas possibilidades de edição
                         System.out.println("Inserir uma locomotiva(1), Inserir um vagão(2), Remover o último elemento do trem(3), Listar locomotivas livres(4), Listar vagões livres(5), Encerrar edição(6)");
                         n = in.nextInt();
-                        switch (n)
-                        {
-                            case 1 ->
-                            {
+                        switch (n) {
+                            case 1 -> {
                                 // Caso existam vagões na composição, não permite que locomotivas sejam adicionadas
                                 if (trem.getQtdadeVagoes() > 0)
                                     System.out.println("Para adicionar mais locomotivas é preciso remover todos os vagões!");
@@ -210,8 +198,7 @@ public class App {
                                 }
                             }
 
-                            case 2 ->
-                            {
+                            case 2 -> {
 
                                 // Permite o usuário escolher um vagão para adicionar a composição
                                 System.out.println("Peso Disponível: " + (trem.getMaxPesoReal() - trem.getPesoAtual()) + " | Vagões Disponíveis: " + (trem.getMaxVagoesReal() - trem.getQtdadeVagoes()));
@@ -238,8 +225,7 @@ public class App {
                                 }
                             }
 
-                            case 3 ->
-                            {
+                            case 3 -> {
 
                                 // Verifica a existencia de vagões, caso existam, o último será removido e devolvido a garagem
                                 if (trem.getQtdadeVagoes() != 0)
@@ -258,16 +244,14 @@ public class App {
                                     System.out.println("Não é possível deixar um trem sem nenhuma locomotiva! Para excluir um trem, acesse a opção no menu principal.");
                             }
 
-                            case 4 ->
-                            {
+                            case 4 -> {
 
                                 // Imprime todas locomotivas disponíveis
                                 System.out.println("LOCOMOTIVAS DISPONÍVEIS:");
                                 imprimirInfo(garagemLocomotivas);
                             }
 
-                            case 5 ->
-                            {
+                            case 5 -> {
 
                                 // Imprime todos os vagões disponíveis
                                 System.out.println("VAGÕES DISPONÍVEIS:");
@@ -281,8 +265,7 @@ public class App {
                 case 3:
 
                     // Imprime todas composições no pátio
-                    if (patioComposicoes.totalComposicoes() == 0)
-                    {
+                    if (patioComposicoes.totalComposicoes() == 0) {
                         System.out.println("Não existem composições para exibir!");
                         break;
                     }
@@ -293,8 +276,7 @@ public class App {
 
                     // Permite a exclusão de uma composição
 
-                    if (patioComposicoes.totalComposicoes() == 0)
-                    {
+                    if (patioComposicoes.totalComposicoes() == 0) {
                         System.out.println("Não existem composições para excluir!");
                         break;
                     }
@@ -334,11 +316,11 @@ public class App {
 
     /**
      * Este método é utilizado para gerar diferentes configurações de locomotivas aleatóriamente
+     *
      * @param garagem Local onde devem ser armazenados as locomotivas
      * @author l.gamarra@edu.pucrs.br
      */
-    public static void generateLocomotivas(GaragemLocomotivas garagem)
-    {
+    public static void generateLocomotivas(GaragemLocomotivas garagem){
         for (int i = 0; i < 100; i++) {
             int id = i;
             int peso = (int) (30 + Math.random() * 100) * 5;
@@ -350,14 +332,14 @@ public class App {
 
     /**
      * Cria um novo objeto Locomotiva, e coloca-o na garagem respectiva
-     * @param id Identificador da locomotiva
-     * @param peso Peso máximo suportado
-     * @param vagoes Quantidade máxima de vagões suportado
+     *
+     * @param id      Identificador da locomotiva
+     * @param peso    Peso máximo suportado
+     * @param vagoes  Quantidade máxima de vagões suportado
      * @param garagem Local onde a locomotiva deve ser armazenada
      * @author l.gamarra@edu.pucrs.br
      */
-    public static void addLocomotiva(int id, int peso, int vagoes, GaragemLocomotivas garagem)
-    {
+    public static void addLocomotiva(int id, int peso, int vagoes, GaragemLocomotivas garagem){
         Locomotiva locomotiva = new Locomotiva(id, peso, vagoes);
         garagem.setLocomotiva(locomotiva);
     }
@@ -365,16 +347,15 @@ public class App {
 
     /**
      * Este método é utilizado para imprimir todas as locomotivas armazenadas na garagem.
+     *
      * @param garagemLocomotivas Local onde as locomotivas estão armazenadas
      * @author l.gamarra@edu.pucrs.br
      */
-    public static void imprimirInfo(GaragemLocomotivas garagemLocomotivas)
-    {
+    public static void imprimirInfo(GaragemLocomotivas garagemLocomotivas){
         garagemLocomotivas.sortLocomotivas();
         System.out.println("          Locomotivas Disponíveis");
         System.out.println("   ID   |   Peso Máx.   |   Vagões Máx.  |");
-        for (int i = 0; i < garagemLocomotivas.totalLocomotivas(); i++)
-        {
+        for (int i = 0; i < garagemLocomotivas.totalLocomotivas(); i++) {
             System.out.print(garagemLocomotivas.getLocomotiva(i).getIdentificador());
             imprimirEspaços(calcularEspaços(8, String.valueOf(garagemLocomotivas.getLocomotiva(i).getIdentificador()).length()));
             System.out.print("|");
@@ -392,55 +373,53 @@ public class App {
 
     /**
      * Imprime espaços, de acordo com o valor inserido
+     *
      * @param n Quantidade de espaços para serem impressos
      * @author l.gamarra@edu.pucrs.br
      */
-    public static void imprimirEspaços(int n)
-    {
-        for (int i = 0; i < n; i++)
-        {
+    public static void imprimirEspaços(int n){
+        for (int i = 0; i < n; i++) {
             System.out.print(" ");
         }
     }
 
     /**
      * Calcula quantos espaços são necessários para imprimir uma palavra de forma formatada
-     * @param total O tamanho do espaço a ser preenchido
+     *
+     * @param total   O tamanho do espaço a ser preenchido
      * @param palavra A palavra que será impressa
      * @return A quantidade de espaços necessários para preencher o espaço total
      * @author l.gamarra@edu.pucrs.br
      */
-    public static int calcularEspaços(int total, int palavra)
-    {
+    public static int calcularEspaços(int total, int palavra){
         return (total - palavra);
     }
 
     /**
      * Cria um novo objeto Vagao, e coloca-o na garagem respectiva
-     * @param id Identificador do vagão
-     * @param peso Peso máximo suportado
+     *
+     * @param id      Identificador do vagão
+     * @param peso    Peso máximo suportado
      * @param garagem Local onde o vagão deve ser armazenado
      * @author l.gamarra@edu.pucrs.br
      */
-    public static void addVagao(int id, int peso, GaragemVagoes garagem)
-    {
-        Vagao vagao = new Vagao (id, peso, 0);
+    public static void addVagao(int id, int peso, GaragemVagoes garagem){
+        Vagao vagao = new Vagao(id, peso, 0);
         garagem.setVagao(vagao);
     }
 
 
     /**
      * Este método é utilizado para imprimir todas os vagões armazenados na garagem.
+     *
      * @param garagemVagoes Local de armazenamento dos vagões
      * @author ricardo.rossa@edu.pucrs.br
      */
-    public static void imprimirInfo(GaragemVagoes garagemVagoes)
-    {
+    public static void imprimirInfo(GaragemVagoes garagemVagoes){
         garagemVagoes.sortVagoes();
         System.out.println("       Vagões Disponíveis");
         System.out.println("   ID   |   Carga Máx.   |");
-        for (int i = 0; i < garagemVagoes.totalVagoes(); i++)
-        {
+        for (int i = 0; i < garagemVagoes.totalVagoes(); i++) {
             System.out.print(garagemVagoes.getVagao(i).getIdentificador());
             imprimirEspaços(calcularEspaços(8, String.valueOf(garagemVagoes.getVagao(i).getIdentificador()).length()));
             System.out.print("|");
@@ -454,16 +433,15 @@ public class App {
 
     /**
      * Este método é utilizado para imprimir todas os trens criados que foram armazenados no patio.
+     *
      * @param trens Local onde os trens estão armazenadas
      * @author joao.farah@edu.pucrs.br, l.gamarra@edu.pucrs.br
      */
-    public static void imprimirInfo(PatioComposicoes trens)
-    {
+    public static void imprimirInfo(PatioComposicoes trens){
         trens.sortComposicoes();
         System.out.println("          Composições Disponíveis (\u001B[35mLocomotivas\u001B[0m e \u001B[36mVagões\u001B[0m)");
         System.out.println("   ID   |   Quantidade de Locomotivas   |   Quantidade de Vagões   |   Peso do Trem   |   Visualização da Composição");
-        for (int i = 0; i < trens.totalComposicoes(); i++)
-        {
+        for (int i = 0; i < trens.totalComposicoes(); i++) {
             System.out.print(trens.getComposicao(i).getIdentificador());
             imprimirEspaços(calcularEspaços(8, String.valueOf(trens.getComposicao(i).getIdentificador()).length()));
             System.out.print("|");
@@ -489,14 +467,13 @@ public class App {
             String print = "";
 
             // Identifica cada carro da composição
-            for (int k = 0; k < trens.getComposicao(i).getQtdadeCarros(); k++)
-            {
+            for (int k = 0; k < trens.getComposicao(i).getQtdadeCarros(); k++) {
 
                 // Caso o carro seja uma locomotiva
                 if (trens.getComposicao(i).getCarro(k) instanceof Locomotiva)
                     print += purple + "L" + trens.getComposicao(i).getCarro(k).getIdentificador() + reset;
 
-                // Caso o carro seja um vagão
+                    // Caso o carro seja um vagão
                 else
                     print += cyan + "V" + trens.getComposicao(i).getCarro(k).getIdentificador() + reset;
 
@@ -513,13 +490,12 @@ public class App {
 
     /**
      * Este método é utilizado para gerar diferentes configurações de vagões aleatóriamente
+     *
      * @param garagem Local onde devem ser armazenados os vagões
      * @author l.gamarra@edu.pucrs.br
      */
-    public static void generateVagoes(GaragemVagoes garagem)
-    {
-        for (int i = 0; i < 100; i++)
-        {
+    public static void generateVagoes(GaragemVagoes garagem){
+        for (int i = 0; i < 100; i++) {
             int id = i;
             int peso = (int) (4 + Math.random() * 8) * 5;
             addVagao(id, peso, garagem);
@@ -529,16 +505,15 @@ public class App {
     /**
      * Este método é utilizado para encontrar a locomotiva especificada pelo usuário
      * Caso a locomotiva não seja encontrada (inválida) é retornado 100.
-     * @param id Identificação da locomotiva que deseja-se encontrar
+     *
+     * @param id      Identificação da locomotiva que deseja-se encontrar
      * @param garagem Local onde a locomotiva deve ser localizada
      * @return Retorna a posição na array da locomotiva com o ID fornecido
      * @author l.gamarra@edu.pucrs.br
      */
-    public static int findLocomotiva(int id, GaragemLocomotivas garagem)
-    {
+    public static int findLocomotiva(int id, GaragemLocomotivas garagem){
         // Procura a locomotiva com o ID fornecido
-        for (int i = 0; i < garagem.totalLocomotivas(); i++)
-        {
+        for (int i = 0; i < garagem.totalLocomotivas(); i++) {
             if (id == garagem.getLocomotiva(i).getIdentificador())
                 return i;
         }
@@ -550,16 +525,15 @@ public class App {
     /**
      * Este método é utilizado para encontrar o vagão especificado pelo usuário
      * Caso o vagão não seja encontrado (inválida) é retornado 100.
-     * @param id Identificação do vagão que deseja-se encontrar
+     *
+     * @param id      Identificação do vagão que deseja-se encontrar
      * @param garagem Local onde o vagão deve ser localizado
      * @return Retorna a posição na array do vagão com o ID fornecido
      * @author l.gamarra@edu.pucrs.br
      */
-    public static int findVagao(int id, GaragemVagoes garagem)
-    {
+    public static int findVagao(int id, GaragemVagoes garagem){
         // Procura a locomotiva com o ID fornecido
-        for (int i = 0; i < garagem.totalVagoes(); i++)
-        {
+        for (int i = 0; i < garagem.totalVagoes(); i++) {
             if (id == garagem.getVagao(i).getIdentificador())
                 return i;
         }
@@ -570,20 +544,18 @@ public class App {
 
     /**
      * Método que realiza a leitura de um arquivo contendo Vagoes.
-      * @param vagoesCSV - path do arquivo.
+     *
+     * @param vagoesCSV     - path do arquivo.
      * @param garagemVagoes - onde estao aramzenados os vagoes
      * @author ricardo.rossa@edu.pucrs.br
      */
-    public static void lerVagoes(Path vagoesCSV, GaragemVagoes garagemVagoes)
-    {
+    public static void lerVagoes(Path vagoesCSV, GaragemVagoes garagemVagoes){
         // Configura o arquivo a ser lido
-        try(BufferedReader br = Files.newBufferedReader(vagoesCSV))
-        {
+        try (BufferedReader br = Files.newBufferedReader(vagoesCSV)) {
             File file = vagoesCSV.toFile();
 
             // Caso a File esteja vazia, automaticamente é gerado conteúdo.
-            if(file.length() == 0)
-            {
+            if (file.length() == 0) {
                 generateVagoes(garagemVagoes);
             }
 
@@ -591,14 +563,12 @@ public class App {
             String line = "";
 
             // Executa um loop até o final do arquivo
-            while( (line = br.readLine() ) != null)
-            {
+            while ((line = br.readLine()) != null) {
                 // Separa o conteúdo lido em uma array de string separado por ","
-                String[] partes = line.split("," , 3);
+                String[] partes = line.split(",", 3);
 
                 // Confere se o procedimento foi concluído com êxito
-                if(partes.length == 3)
-                {
+                if (partes.length == 3) {
                     // Carrega o código
                     int codigo = Integer.parseInt(partes[0].trim());
 
@@ -612,9 +582,7 @@ public class App {
                     garagemVagoes.setVagao(vag);
                 }
             }
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -622,20 +590,18 @@ public class App {
 
     /**
      * Método que realiza a leitura de um arquivo contendo Locomotivas.
-     * @param locomotivasCSV - path do arquivo.
+     *
+     * @param locomotivasCSV     - path do arquivo.
      * @param garagemLocomotivas - onde estao armazenadas as locomotivas
      * @author ricardo.rossa@edu.pucrs.br
      */
-    public static void lerLocomotivas(Path locomotivasCSV, GaragemLocomotivas garagemLocomotivas)
-    {
+    public static void lerLocomotivas(Path locomotivasCSV, GaragemLocomotivas garagemLocomotivas){
         // Configura o arquivo a ser lido
-        try(BufferedReader br = Files.newBufferedReader(locomotivasCSV))
-        {
+        try (BufferedReader br = Files.newBufferedReader(locomotivasCSV)) {
             File file = locomotivasCSV.toFile();
 
             // Caso a File esteja vazia, automaticamente é gerado conteúdo.
-            if(file.length() == 0)
-            {
+            if (file.length() == 0) {
                 generateLocomotivas(garagemLocomotivas);
             }
 
@@ -643,14 +609,12 @@ public class App {
             String line = "";
 
             // Executa um loop até o final do arquivo
-            while( (line = br.readLine()) != null)
-            {
+            while ((line = br.readLine()) != null) {
                 // Separa o conteúdo lido em uma array de string separado por ","
-                String[] partes = line.split("," , 4);
+                String[] partes = line.split(",", 4);
 
                 // Confere se o procedimento foi concluído com êxito
-                if(partes.length == 4)
-                {
+                if (partes.length == 4) {
                     // Carrega o código
                     int id = Integer.parseInt(partes[0].trim());
 
@@ -661,40 +625,36 @@ public class App {
                     int quantMaxVagoes = Integer.parseInt(partes[2].trim());
 
                     // Inicializa uma locomotiva com os dados informados
-                    Locomotiva locom = new Locomotiva(id,pesoMax,quantMaxVagoes);
+                    Locomotiva locom = new Locomotiva(id, pesoMax, quantMaxVagoes);
 
                     // Salva a locomotiva na garagem
                     garagemLocomotivas.setLocomotiva(locom);
                 }
             }
 
-        }
-        catch(IOException e)
-        {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     /**
      * Método que realiza a leitura de um arquivo contendo Composicoes.
-     * @param path - path do arquivo.
+     *
+     * @param path             - path do arquivo.
      * @param patioComposicoes - onde estao armazenadas as composicoes
      * @author l.gamarra@edu.pucrs.br, ricardo.rossa@edu.pucrs.br, joao.farah@edu.pucrs.br
      */
-    public static void lerComposicoes(Path path, PatioComposicoes patioComposicoes)
-    {
+    public static void lerComposicoes(Path path, PatioComposicoes patioComposicoes){
         // Configura o arquivo a ser lido
-        try(BufferedReader br = Files.newBufferedReader(path))
-        {
+        try (BufferedReader br = Files.newBufferedReader(path)) {
 
             // Inicializa uma string vazia
             String line = "";
 
             // Enquanto a linha lida for diferente de "null", inicializa uma nova composição
-            while( (line = br.readLine()) != null)
-            {
+            while ((line = br.readLine()) != null) {
                 // Caso a linha tenha tamanho == 0, cancela o loop
-                if(line.length() == 0)
+                if (line.length() == 0)
                     break;
 
                 // Declara uma nova composição
@@ -708,14 +668,12 @@ public class App {
                 }
 
                 // Enquanto a linha não for vazia(""), inicializa uma nova locomotiva
-                while( !(line = br.readLine()).equals(""))
-                {
+                while (!(line = br.readLine()).equals("")) {
                     // Separa o conteúdo lido em uma array de string separado por ","
-                    String[] partes = line.split("," , 4);
+                    String[] partes = line.split(",", 4);
 
                     // Confere se o procedimento foi concluído com êxito
-                    if(partes.length == 4)
-                    {
+                    if (partes.length == 4) {
                         // Carrega o código
                         int id = Integer.parseInt(partes[0].trim());
 
@@ -726,7 +684,7 @@ public class App {
                         int quantMaxVagoes = Integer.parseInt(partes[2].trim());
 
                         // Inicializa a locomotiva com os dados lidos
-                        Locomotiva locom = new Locomotiva(id,pesoMax,quantMaxVagoes);
+                        Locomotiva locom = new Locomotiva(id, pesoMax, quantMaxVagoes);
 
                         // Engata a locomotiva na composição
                         c.engata(locom);
@@ -734,14 +692,12 @@ public class App {
                 }
 
                 // Enquanto a linha não for vazia(""), inicializa um novo vagão
-                while( !(line = br.readLine()).equals(""))
-                {
+                while (!(line = br.readLine()).equals("")) {
                     // Separa o conteúdo lido em uma array de string separado por ","
-                    String[] partes = line.split("," , 3);
+                    String[] partes = line.split(",", 3);
 
                     // Confere se o procedimento foi concluído com êxito
-                    if(partes.length == 3)
-                    {
+                    if (partes.length == 3) {
                         // Carrega o código
                         int codigo = Integer.parseInt(partes[0].trim());
 
@@ -762,21 +718,19 @@ public class App {
                 patioComposicoes.setComposicao(c);
             }
 
-        }
-        catch(IOException e)
-        {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     /**
      * Método que salva um arquivo recebido como input.
+     *
      * @param fileName - nome do arquivo
-     * @param print - conteúdo a ser escrito no arquivo.
+     * @param print    - conteúdo a ser escrito no arquivo.
      * @author l.gamarra@edu.pucrs.br, joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
      */
-    public static void salvar(String fileName, String print)
-    {
+    public static void salvar(String fileName, String print){
         // Obtem o separador específico do sistema do usuário
         String separador = File.separator;
 
@@ -808,12 +762,12 @@ public class App {
 
     /**
      * Método utilizado dentro do método salvar para arquivos. Este método salva uma string formatada, contendo todas as locomotivas.
+     *
      * @param garagemLocomotivas - onde estão aramzenadas as locomotivas
      * @return result - String formatada de locomotivas.
      * @author l.gamarra@edu.pucrs.br, joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
      */
-    public static String salvar(GaragemLocomotivas garagemLocomotivas)
-    {
+    public static String salvar(GaragemLocomotivas garagemLocomotivas){
         // Organiza as locomotivas na garagem
         garagemLocomotivas.sortLocomotivas();
 
@@ -831,12 +785,12 @@ public class App {
 
     /**
      * Método utilizado dentro do método salvar para arquivos. Este método salva uma string formatada, contendo uma locomotiva.
-     * @param locomotiva  - locomotiva individual a ser salva
+     *
+     * @param locomotiva - locomotiva individual a ser salva
      * @return result - String formatada da locomotiva.
      * @author l.gamarra@edu.pucrs.br, joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
      */
-    public static String salvar(Locomotiva locomotiva)
-    {
+    public static String salvar(Locomotiva locomotiva){
         // Inicializa uma string vazia
         String result = "";
 
@@ -856,14 +810,15 @@ public class App {
         // Retorna result
         return result;
     }
+
     /**
      * Método utilizado dentro do método salvar para arquivos. Este método salva uma string formatada, contendo todos os vagoes.
+     *
      * @param garagemVagoes- onde estão aramzenados os Vagoes.
      * @return result - String formatada de vagoes.
      * @author l.gamarra@edu.pucrs.br, joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
      */
-    public static String salvar(GaragemVagoes garagemVagoes)
-    {
+    public static String salvar(GaragemVagoes garagemVagoes){
         // Organiza os vagões na garagem
         garagemVagoes.sortVagoes();
 
@@ -881,12 +836,12 @@ public class App {
 
     /**
      * Método utilizado dentro do método salvar para arquivos. Este método salva uma string formatada, contendo um vagao.
+     *
      * @param vagao - vagao individual a ser salvo
      * @return result - String formatada do vagao
      * @author l.gamarra@edu.pucrs.br, joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
      */
-    public static String salvar(Vagao vagao)
-    {
+    public static String salvar(Vagao vagao){
         // Inicializa uma string vazia
         String res = "";
 
@@ -895,7 +850,7 @@ public class App {
         res += ", ";
 
         // Concatena a capacidade de carga do vagão seguido de ","
-        res+= vagao.getCapacidadeCarga();
+        res += vagao.getCapacidadeCarga();
         res += ", ";
         res += "\n";
 
@@ -905,12 +860,12 @@ public class App {
 
     /**
      * Método utilizado dentro do método salvar para arquivos. Este método salva uma string formatada, contendo todas as composicoes.
+     *
      * @param trens - onde estão aramzenadas as composicoes
      * @return result - String formatada de composicoes
      * @author l.gamarra@edu.pucrs.br, joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
      */
-    public static String salvar(PatioComposicoes trens)
-    {
+    public static String salvar(PatioComposicoes trens){
         // Organiza as composições no pátio
         trens.sortComposicoes();
 
@@ -918,8 +873,7 @@ public class App {
         String result = "";
 
         // Concatena dados de cada umas das composições armazenadas
-        for (int i = 0; i < trens.totalComposicoes(); i++)
-        {
+        for (int i = 0; i < trens.totalComposicoes(); i++) {
             // Concatena o identificador da composição
             result += trens.getComposicao(i).getIdentificador();
 
@@ -927,8 +881,7 @@ public class App {
             result += ",\n";
 
             // Concatena dados de cada uma das locomotivas da composição
-            for (int k = 0; k < trens.getComposicao(i).getQtdadeLocomotivas(); k++)
-            {
+            for (int k = 0; k < trens.getComposicao(i).getQtdadeLocomotivas(); k++) {
                 // Concatena dados das locomotivas
                 result += salvar((Locomotiva) trens.getComposicao(i).getCarro(k));
             }
@@ -936,8 +889,7 @@ public class App {
             result += "\n";
 
             // Concatena dados de todos os vagões da composição
-            for (int k = trens.getComposicao(i).getQtdadeLocomotivas() ; k < trens.getComposicao(i).getQtdadeCarros(); k++)
-            {
+            for (int k = trens.getComposicao(i).getQtdadeLocomotivas(); k < trens.getComposicao(i).getQtdadeCarros(); k++) {
                 // Concatena dados de vagões
                 result += salvar((Vagao) trens.getComposicao(i).getCarro(k));
             }
@@ -948,4 +900,33 @@ public class App {
         return result;
     }
 
+    public static String addEspaços(int n){
+        String res ="";
+        for (int i = 0; i < n; i++) {
+            res += " ";
+        }
+        return res;
+    }
+
+    public static String[] retornaInfo(){
+        getGaragemLocomotivas();
+        String[] res = new String[garagemLocomotivas.totalLocomotivas()];
+
+        for (int i = 0; i < garagemVagoes.totalVagoes(); i++) {
+            res[i] = "";
+
+            res[i] += garagemVagoes.getVagao(i).getIdentificador();
+            res[i] += addEspaços(8);
+
+            res[i] += "|";
+
+            res[i] += garagemVagoes.getVagao(i).getCapacidadeCarga();
+            res[i] += addEspaços(16);
+
+            res[i] += "|";
+        }
+        return res;
+    }
 }
+
+
