@@ -14,6 +14,9 @@ import java.nio.file.Files;
  * @version 15/10/23
  */
 public class App{
+    static GaragemLocomotivas garagemLocomotivas;
+    static GaragemVagoes garagemVagoes;
+    static PatioComposicoes patioComposicoes;
     /**
      * Construtor Vazio da classe App (Para Javadoc)
      *
@@ -36,19 +39,19 @@ public class App{
         Scanner in = new Scanner(System.in);
 
         // Inicializa a garagem para locomotivas
-        GaragemLocomotivas garagemLocomotivas = new GaragemLocomotivas();
+        garagemLocomotivas = new GaragemLocomotivas();
 
         // Cria locomotivas para utilização do App
         // generateLocomotivas(garagemLocomotivas);
 
         // Inicializa a garagem para vagões
-        GaragemVagoes garagemVagoes = new GaragemVagoes();
+        garagemVagoes = new GaragemVagoes();
 
         // Cria vagões para utilização do App
         // generateVagoes(garagemVagoes);
 
         // Inicializa o patio para os trems
-        PatioComposicoes patioComposicoes = new PatioComposicoes();
+        patioComposicoes = new PatioComposicoes();
 
         // Define o Path de onde será carregado as locomotivas e os vagões
         String diretorioAtual = Paths.get("").toAbsolutePath().toString();
@@ -909,7 +912,6 @@ public class App{
     }
 
     public static String[] retornaInfo(){
-        getGaragemLocomotivas();
         String[] res = new String[garagemLocomotivas.totalLocomotivas()];
 
         for (int i = 0; i < garagemVagoes.totalVagoes(); i++) {

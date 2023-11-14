@@ -39,7 +39,13 @@ public class UI{
 
             id.addActionListener(e1 -> {
                 JList listaLocomotivas = new JList(retornaInfo());
-                panelCriar.add(listaLocomotivas);
+                listaLocomotivas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+                JScrollPane listScroller = new JScrollPane(listaLocomotivas);
+
+                panelCriar.setLayout(new BorderLayout());
+
+                panelCriar.add(listScroller);
                 frame.revalidate();
                 frame.repaint();
             });
