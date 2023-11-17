@@ -41,6 +41,7 @@ public class UI{
             frame.repaint();
             voltar.addActionListener(e1 -> {
                 returnToMenu();
+                App.reset();
             });
 
             // Adicionar locomotivas
@@ -57,8 +58,7 @@ public class UI{
                 listaLocomotivas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                 JScrollPane listScroller = new JScrollPane(listaLocomotivas);
                 panelCriar2.add(listScroller);
-                JButton voltar2 = new JButton("Voltar");
-                panelCriar2.add(voltar2);
+                panelCriar2.add(voltar);
                 JButton adicionar2 = new JButton("Adicionar");
                 panelCriar2.add(adicionar2);
                 JButton proximo2 = new JButton("Proximo");
@@ -79,20 +79,11 @@ public class UI{
                 frame.revalidate();
                 frame.repaint();
 
-                voltar2.addActionListener(e1 -> {
-                    frame.setContentPane(panelCriar);
-                    frame.revalidate();
-                    frame.repaint();
-                });
-
                 adicionar2.addActionListener(a ->
                 {
                     Locomotiva loc = (Locomotiva) listaLocomotivas.getSelectedValue();
-                    int n = listaLocomotivas.getSelectedIndex();
                     App.addLocomotiva(loc);
                     listaLocomotivas.clearSelection();
-                    listaLocomotivas.remove(n);
-                    listaLocomotivas.repaint();
                 });
 
                 // Adicionar vagoes
@@ -107,8 +98,7 @@ public class UI{
                 listaVagoes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                 JScrollPane listScroller2 = new JScrollPane(listaVagoes);
                 panelCriar3.add(listScroller2);
-                JButton voltar3 = new JButton("Voltar");
-                panelCriar3.add(voltar3);
+                panelCriar3.add(voltar);
                 JButton adicionar3 = new JButton("Adicionar");
                 panelCriar3.add(adicionar3);
                 JButton proximo3 = new JButton("Proximo");
@@ -119,11 +109,6 @@ public class UI{
                 frame.revalidate();
                 frame.repaint();
 
-                voltar3.addActionListener(e1 -> {
-                    frame.setContentPane(panelCriar2);
-                    frame.revalidate();
-                    frame.repaint();
-                });
 
                 adicionar3.addActionListener(b ->
                 {
@@ -136,16 +121,12 @@ public class UI{
                     frame.setContentPane(panelCriar4);
                     JLabel fim = new JLabel("Trem criado com sucesso!");
                     panelCriar4.add(fim);
-                    JButton voltar4 = new JButton("Voltar ao Menu");
-                    panelCriar4.add(voltar4);
+                    panelCriar4.add(voltar);
                     panel.setLayout(new BorderLayout());
 
                     frame.revalidate();
                     frame.repaint();
 
-                    voltar4.addActionListener(e1 -> {
-                        returnToMenu();
-                    });
                 });
 
                 });
