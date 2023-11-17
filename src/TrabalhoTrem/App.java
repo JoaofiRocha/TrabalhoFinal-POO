@@ -911,6 +911,7 @@ public class App{
         return res;
     }
 
+
     public static String[] retornaInfo(){
         String[] res = new String[garagemLocomotivas.totalLocomotivas()];
 
@@ -929,6 +930,7 @@ public class App{
         }
         return res;
     }
+
 }
 
 

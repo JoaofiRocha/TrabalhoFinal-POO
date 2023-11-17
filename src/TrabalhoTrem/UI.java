@@ -39,6 +39,7 @@ public class UI{
 
             id.addActionListener(e1 -> {
                 JList listaLocomotivas = new JList(retornaInfo());
+                panelCriar.add(listaLocomotivas);
                 listaLocomotivas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
                 JScrollPane listScroller = new JScrollPane(listaLocomotivas);
@@ -50,6 +51,35 @@ public class UI{
                 frame.repaint();
             });
 
+        });
+
+
+        // Listar Trens
+        listarTrem.addActionListener(e -> {
+            JPanel panelLista = new JPanel();
+            frame.setContentPane(panelLista);
+
+            JButton voltarB = new JButton("Voltar");
+            JList listaLocomotivas = new JList(new String[] {"Trem1", "Trem2" ,"Trem3", "Trem4" ,"Trem5", "Trem6", "Trem7" ,"Trem8", "Trem9" ,"Trem10","Trem11" ,"Trem12", "Trem13 - texto longo muito longo enorme gigantesco gigante grande grandioso texto longo", });
+            JScrollPane scrollTrem = new JScrollPane();
+
+            scrollTrem.setViewportView(listaLocomotivas);
+            scrollTrem.setPreferredSize(new Dimension(280,200));
+            scrollTrem.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+            scrollTrem.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+            listaLocomotivas.setLayoutOrientation(JList.VERTICAL);
+            listaLocomotivas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+            panel.setLayout(new BorderLayout());
+            panelLista.add(scrollTrem, BorderLayout.CENTER);
+            panelLista.add(voltarB, BorderLayout.SOUTH);
+            frame.revalidate();
+            frame.repaint();
+
+            voltarB.addActionListener(e1 -> {
+                returnToMenu();
+            });
         });
 
 
