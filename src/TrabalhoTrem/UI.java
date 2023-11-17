@@ -67,10 +67,9 @@ public class UI{
                 Locomotiva d = null;
 
                 // Tenta criar o trem com a id solicitada, caso já exista, retorna para o menu anterior
-                Composicao trem = null;
                 try {
-                    trem = new Composicao(idTrem, patioComposicoes);
-                } catch (IDJaEmUsoException ex) {
+                    App.id(idTrem);
+                } catch (RuntimeException ex) {
                     frame.setContentPane(panelCriar);
                     frame.revalidate();
                     frame.repaint();
@@ -89,6 +88,11 @@ public class UI{
                 adicionar2.addActionListener(a ->
                 {
                     Locomotiva loc = (Locomotiva) listaLocomotivas.getSelectedValue();
+                    int n = listaLocomotivas.getSelectedIndex();
+                    App.addLocomotiva(loc);
+                    listaLocomotivas.clearSelection();
+                    listaLocomotivas.remove(n);
+                    listaLocomotivas.repaint();
                 });
 
                 // Adicionar vagoes
@@ -191,7 +195,6 @@ public class UI{
         });
 
 
-
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(300,300);
         frame.getContentPane().add(panel);
@@ -213,10 +216,5 @@ public class UI{
         textField.setEditable(true);
         panel.add(textField);
         return textField;
-    }
-
-    private void engata(Locomotiva locomotiva, Composicao trem)
-    {
-        trem.engata(locomotiva);
     }
 }

@@ -17,6 +17,8 @@ public class App{
     static GaragemLocomotivas garagemLocomotivas;
     static GaragemVagoes garagemVagoes;
     static PatioComposicoes patioComposicoes;
+    static Composicao trem;
+
     /**
      * Construtor Vazio da classe App (Para Javadoc)
      *
@@ -65,256 +67,25 @@ public class App{
         lerLocomotivas(locomotivasCSV, garagemLocomotivas);
         lerComposicoes(composicoesCSV, patioComposicoes);
 
+    }
 
-        // Recebe inputs do usuário
-        int userIn;
-        do {
-            System.out.println("Criar um Trem(1), Editar um Trem(2), Listar Todos os Trens(3), Desfazer um Trem(4), Salvar e Sair(5)");
-            userIn = in.nextInt();
+    public static void id (int n)
+    {
+        try {
+            trem = new Composicao(n, patioComposicoes);
+        } catch (IDJaEmUsoException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-            switch (userIn) {
+    public static void addLocomotiva (Locomotiva loc)
+    {
+        trem.engata(loc, garagemLocomotivas);
+    }
 
-                case 1:
-                    System.out.print("Insira o ID do Trem a ser criado: ");
-
-                    // Recebe o ID do trem
-                    int idTrem = in.nextInt();
-
-                    // Inicializa um trem como null e um boolean idValido para checar a validade do ID
-                    Composicao trem = null;
-                    boolean idValido = false;
-
-                    // Enquanto o ID for invalido, o loop continua executando
-                    while (!idValido) {
-                        // Aqui se tenta criar um trem, que ja foi inicializado fora deste bloco como null
-                        // Caso obtenha-se um idValido, o trem é criado e saímos da exceção
-                        try {
-                            trem = new Composicao(idTrem, patioComposicoes);
-                            idValido = true;
-                            System.out.println("Trem criado com sucesso!");
-                            System.out.println();
-                            // Caso o ID seja inválido, é lançada a exceção que pede para o usuário colocar um novo ID!
-                        } catch (IDJaEmUsoException e) {
-                            System.out.println(e.getMessage());
-                            idTrem = in.nextInt();
-                        }
-                    }
-                    // Permite escolher locomotivas
-
-                    int n;
-
-                    do {
-                        System.out.println("LOCOMOTIVAS DISPONÍVEIS:");
-                        imprimirInfo(garagemLocomotivas);
-                        System.out.print("Insira o ID da locomotiva desejada: ");
-                        int id = in.nextInt();
-                        int posicao = findLocomotiva(id, garagemLocomotivas);
-                        if (posicao == 100) {
-                            System.out.println("O ID fornecido não existe!");
-                            n = 1;
-                        } else {
-                            trem.engata(garagemLocomotivas.getLocomotiva(posicao), garagemLocomotivas);
-                            System.out.println("Locomotiva acoplada com sucesso!");
-                            System.out.print("Gostaria de selecionar outra locomotiva? Sim(1) / Não(2)");
-                            n = in.nextInt();
-                        }
-
-                    }
-                    while (n == 1);
-
-                    // Calcula as capacidades do conjunto de locomotivas escolhido
-                    trem.calcularCapacidadeReal();
-
-                    // Permite engatar vagões
-
-                    do {
-                        System.out.println("VAGÕES DISPONÍVEIS:");
-                        imprimirInfo(garagemVagoes);
-                        System.out.println("Peso Disponível: " + (trem.getMaxPesoReal() - trem.getPesoAtual()) + " | Vagões Disponíveis: " + (trem.getMaxVagoesReal() - trem.getQtdadeVagoes()));
-                        System.out.print("Insira o ID do vagão desejado: ");
-                        int id = in.nextInt();
-                        int posicao = findVagao(id, garagemVagoes);
-                        if (posicao == 100) {
-                            System.out.println("O ID fornecido não existe!");
-                            n = 1;
-                        } else {
-                            if (trem.getMaxPesoReal() - (trem.getPesoAtual() + garagemVagoes.getVagao(posicao).getCapacidadeCarga()) <= 0 || trem.getMaxVagoesReal() - trem.getQtdadeVagoes() == 0) {
-                                System.out.println("Não é possível adicionar mais vagões!");
-                                n = 2;
-                            } else {
-                                trem.engata(garagemVagoes.getVagao(posicao), garagemVagoes);
-                                System.out.println("Vagão acoplado com sucesso!");
-                                System.out.print("Gostaria de selecionar outro vagão? Sim(1) / Não(2)");
-                                n = in.nextInt();
-                            }
-                        }
-                    } while (n == 1);
-
-                    patioComposicoes.setComposicao(trem);
-                    System.out.println("O trem foi adicionado ao pátio!");
-
-                    break;
-
-                case 2:
-
-                    // Permite ao usuário escolher o trem a ser editado
-
-                    if (patioComposicoes.totalComposicoes() == 0) {
-                        System.out.println("Não existem composições para editar!");
-                        break;
-                    }
-                    System.out.print("Insira o ID do trem a ser editado: ");
-                    boolean tremExiste;
-                    do {
-                        idTrem = in.nextInt();
-                        tremExiste = patioComposicoes.tremExiste(idTrem);
-                        if (!tremExiste)
-                            System.out.println("Não existe trem com a ID fornecida!");
-                    } while (!tremExiste);
-
-                    // Carrega a composição no objeto "trem"
-                    trem = patioComposicoes.getComposicao(patioComposicoes.acharTrem(idTrem));
-
-                    do {
-                        // Apresenta diversas possibilidades de edição
-                        System.out.println("Inserir uma locomotiva(1), Inserir um vagão(2), Remover o último elemento do trem(3), Listar locomotivas livres(4), Listar vagões livres(5), Encerrar edição(6)");
-                        n = in.nextInt();
-                        switch (n) {
-                            case 1 -> {
-                                // Caso existam vagões na composição, não permite que locomotivas sejam adicionadas
-                                if (trem.getQtdadeVagoes() > 0)
-                                    System.out.println("Para adicionar mais locomotivas é preciso remover todos os vagões!");
-                                    // Caso contrario, permite adicionar novas locomotivas
-                                else {
-                                    System.out.print("Insira o ID da locomotiva desejada: ");
-                                    int id = in.nextInt();
-                                    int posicao = findLocomotiva(id, garagemLocomotivas);
-                                    if (posicao == 100)
-                                        System.out.println("O ID fornecido não existe!");
-                                    else {
-                                        trem.engata(garagemLocomotivas.getLocomotiva(posicao), garagemLocomotivas);
-                                        System.out.println("Locomotiva acoplada com sucesso!");
-
-                                        // Calcula novamente as capacidades reais da composição
-                                        trem.calcularCapacidadeReal();
-                                    }
-                                }
-                            }
-
-                            case 2 -> {
-
-                                // Permite o usuário escolher um vagão para adicionar a composição
-                                System.out.println("Peso Disponível: " + (trem.getMaxPesoReal() - trem.getPesoAtual()) + " | Vagões Disponíveis: " + (trem.getMaxVagoesReal() - trem.getQtdadeVagoes()));
-                                System.out.print("Insira o ID do vagão desejado: ");
-                                int id = in.nextInt();
-                                int posicao = findVagao(id, garagemVagoes);
-
-                                // Caso não exista nenhuma composição com o ID informado, volta ao menu de edição
-                                if (posicao == 100)
-                                    System.out.println("O ID fornecido não existe!");
-
-                                    // Existindo uma composição com o ID informado, é necessário conferir se o vagão pode ser acoplado
-                                else {
-                                    // Verifica a possibilidade de acoplar o vagão de acordo com as capacidades das locomotivas
-                                    if (trem.getMaxPesoReal() - (trem.getPesoAtual() + garagemVagoes.getVagao(posicao).getCapacidadeCarga()) <= 0 || trem.getMaxVagoesReal() - trem.getQtdadeVagoes() == 0) {
-                                        System.out.println("Não é possível adicionar mais vagões!");
-                                    }
-
-                                    // Acopla o vagão selecionado
-                                    else {
-                                        trem.engata(garagemVagoes.getVagao(posicao), garagemVagoes);
-                                        System.out.println("Vagão acoplado com sucesso!");
-                                    }
-                                }
-                            }
-
-                            case 3 -> {
-
-                                // Verifica a existencia de vagões, caso existam, o último será removido e devolvido a garagem
-                                if (trem.getQtdadeVagoes() != 0)
-                                    trem.desengata(garagemVagoes);
-
-                                    // Verifica a existencia de locomotivas, caso existam, o último será removido e devolvido a garagem
-                                else if (trem.getQtdadeLocomotivas() != 1) {
-                                    trem.desengata(garagemLocomotivas);
-
-                                    // A capacidade real da composição é recalculada após a remoção de uma locomotiva
-                                    trem.calcularCapacidadeReal();
-                                }
-
-                                // Caso exista somente uma locomotiva na composição, não permite que seja removida
-                                else
-                                    System.out.println("Não é possível deixar um trem sem nenhuma locomotiva! Para excluir um trem, acesse a opção no menu principal.");
-                            }
-
-                            case 4 -> {
-
-                                // Imprime todas locomotivas disponíveis
-                                System.out.println("LOCOMOTIVAS DISPONÍVEIS:");
-                                imprimirInfo(garagemLocomotivas);
-                            }
-
-                            case 5 -> {
-
-                                // Imprime todos os vagões disponíveis
-                                System.out.println("VAGÕES DISPONÍVEIS:");
-                                imprimirInfo(garagemVagoes);
-                            }
-                        }
-                    } while (n != 6);
-
-                    break;
-
-                case 3:
-
-                    // Imprime todas composições no pátio
-                    if (patioComposicoes.totalComposicoes() == 0) {
-                        System.out.println("Não existem composições para exibir!");
-                        break;
-                    }
-                    imprimirInfo(patioComposicoes);
-                    break;
-
-                case 4:
-
-                    // Permite a exclusão de uma composição
-
-                    if (patioComposicoes.totalComposicoes() == 0) {
-                        System.out.println("Não existem composições para excluir!");
-                        break;
-                    }
-
-                    System.out.print("Insira o ID do trem a ser excluído: ");
-
-                    do {
-                        idTrem = in.nextInt();
-                        tremExiste = patioComposicoes.tremExiste(idTrem);
-                        if (!tremExiste)
-                            System.out.println("Não existe trem com a ID fornecida!");
-                    } while (!tremExiste);
-
-                    // Carrega o objeto composicao para a variável "trem"
-                    trem = patioComposicoes.getComposicao(patioComposicoes.acharTrem(idTrem));
-
-                    // Devolve todos os vagões a garagem
-                    while (trem.getQtdadeVagoes() != 0)
-                        trem.desengata(garagemVagoes);
-
-                    // Devolve todas as locomotivas a garagem
-                    while (trem.getQtdadeLocomotivas() != 0)
-                        trem.desengata(garagemLocomotivas);
-
-                    // Exclui a composição do pátio
-                    patioComposicoes.deletarComposicao(trem);
-
-                    System.out.println("A composição foi excluída! Locomotivas e vagões retornaram a suas respectivas garagens.");
-
-                case 05:
-                    salvar("loc.csv", salvar(garagemLocomotivas));
-                    salvar("vag.csv", salvar(garagemVagoes));
-                    salvar("comp.csv", salvar(patioComposicoes));
-            }
-        } while (userIn != 5);
+    public static void reset()
+    {
+        trem = null;
     }
 
     /**
@@ -331,7 +102,6 @@ public class App{
             addLocomotiva(id, peso, vagoes, garagem);
         }
     }
-
 
     /**
      * Cria um novo objeto Locomotiva, e coloca-o na garagem respectiva
@@ -950,66 +720,6 @@ public class App{
             res[i] = garagemVagoes.getVagao(i);
         }
 
-        return res;
-    }
-
-    public static void engata(Locomotiva l)
-    {
-
-    }
-
-    public static String[] retornaInfo(){
-        String[] res = new String[garagemLocomotivas.totalLocomotivas()];
-
-        for (int i = 0; i < garagemLocomotivas.totalLocomotivas(); i++) {
-            res[i] = "";
-
-            res[i] += garagemLocomotivas.getLocomotiva(i).getIdentificador();
-            res[i] += addEspacos(8, String.valueOf(garagemLocomotivas.getLocomotiva(i).getIdentificador()).length());
-
-            res[i] += "|";
-
-            res[i] += garagemLocomotivas.getLocomotiva(i).getPesoMax();
-            res[i] += addEspacos(16, String.valueOf(garagemLocomotivas.getLocomotiva(i).getPesoMax()).length());
-
-            res[i] += "|";
-
-            res[i] += garagemLocomotivas.getLocomotiva(i).getQtdadeMaxVagoes();
-            res[i] += addEspacos(16, String.valueOf(garagemLocomotivas.getLocomotiva(i).getQtdadeMaxVagoes()).length());
-
-            res[i] += "|";
-        }
-        return res;
-    }
-
-
-    public static String[] retornaInfoTrens(){
-        String[] res = new String[patioComposicoes.totalComposicoes()];
-
-        for (int i = 0; i < patioComposicoes.totalComposicoes(); i++) {
-            res[i] = ("");
-
-            res[i] += (patioComposicoes.getComposicao(i).getIdentificador());
-            res[i] += addEspacos(8, String.valueOf(patioComposicoes.getComposicao(i).getIdentificador()).length());
-            res[i] += "|";
-
-            res[i] += (patioComposicoes.getComposicao(i).getQtdadeLocomotivas());
-            res[i] += addEspacos(31, String.valueOf(patioComposicoes.getComposicao(i).getQtdadeLocomotivas()).length());
-            res[i] += "|";
-
-            res[i] += (patioComposicoes.getComposicao(i).getQtdadeVagoes());
-            res[i] += addEspacos(26, String.valueOf(patioComposicoes.getComposicao(i).getQtdadeVagoes()).length());
-            res[i] += "|";
-
-            res[i] += (patioComposicoes.getComposicao(i).getPesoAtual());
-            res[i] += addEspacos(18, String.valueOf(patioComposicoes.getComposicao(i).getPesoAtual()).length());
-            res[i] += "|";
-
-            String print = (vizualizaComposicoes(patioComposicoes, i));
-            // Imprime a visualização
-            res[i] += (print);
-
-        }
         return res;
     }
 
