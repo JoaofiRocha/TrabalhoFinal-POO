@@ -3,6 +3,7 @@ import javax.swing.*;
 import java.awt.*;
 
 import static TrabalhoTrem.App.retornaInfo;
+import static TrabalhoTrem.App.retornaInfoTrens;
 
 public class UI{
     private JFrame frame;
@@ -29,8 +30,23 @@ public class UI{
             JPanel panelCriar = new JPanel();
             frame.setContentPane(panelCriar);
             JTextField id = addTextField(panelCriar, "ID");
+
+            // Cria e adiciona botoes
             JButton voltar = new JButton("Voltar");
+            JButton proximo = new JButton("Proximo");
+            panelCriar.add(proximo);
             panelCriar.add(voltar);
+
+            JList listaLocomotivas = new JList(retornaInfo());
+            panelCriar.add(listaLocomotivas);
+            listaLocomotivas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+            JScrollPane listScroller = new JScrollPane(listaLocomotivas);
+
+            panel.setLayout(new BorderLayout());
+            panelCriar.add(listScroller);
+
+
             frame.revalidate();
             frame.repaint();
             voltar.addActionListener(e1 -> {
@@ -38,17 +54,7 @@ public class UI{
             });
 
             id.addActionListener(e1 -> {
-                JList listaLocomotivas = new JList(retornaInfo());
-                panelCriar.add(listaLocomotivas);
-                listaLocomotivas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-                JScrollPane listScroller = new JScrollPane(listaLocomotivas);
-
-                panelCriar.setLayout(new BorderLayout());
-
-                panelCriar.add(listScroller);
-                frame.revalidate();
-                frame.repaint();
             });
 
         });
@@ -60,7 +66,7 @@ public class UI{
             frame.setContentPane(panelLista);
 
             JButton voltarB = new JButton("Voltar");
-            JList listaLocomotivas = new JList(new String[] {"Trem1", "Trem2" ,"Trem3", "Trem4" ,"Trem5", "Trem6", "Trem7" ,"Trem8", "Trem9" ,"Trem10","Trem11" ,"Trem12", "Trem13 - texto longo muito longo enorme gigantesco gigante grande grandioso texto longo", });
+            JList listaLocomotivas = new JList(retornaInfoTrens());
             JScrollPane scrollTrem = new JScrollPane();
 
             scrollTrem.setViewportView(listaLocomotivas);

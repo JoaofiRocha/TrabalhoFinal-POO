@@ -461,34 +461,39 @@ public class App{
             imprimirEspaços(calcularEspaços(18, String.valueOf(trens.getComposicao(i).getPesoAtual()).length()));
             System.out.print("|");
 
-            // Inicializa strings com valores de cores
-            String reset = "\u001B[0m";
-            String purple = "\u001B[35m";
-            String cyan = "\u001B[36m";
-
-            // Inicializa uma string vazia
-            String print = "";
-
-            // Identifica cada carro da composição
-            for (int k = 0; k < trens.getComposicao(i).getQtdadeCarros(); k++) {
-
-                // Caso o carro seja uma locomotiva
-                if (trens.getComposicao(i).getCarro(k) instanceof Locomotiva)
-                    print += purple + "L" + trens.getComposicao(i).getCarro(k).getIdentificador() + reset;
-
-                    // Caso o carro seja um vagão
-                else
-                    print += cyan + "V" + trens.getComposicao(i).getCarro(k).getIdentificador() + reset;
-
-                // Caso não seja o último elemento é preciso concatenar a ligação
-                if (k < trens.getComposicao(i).getQtdadeCarros() - 1)
-                    print += "---";
-            }
+            String print = (vizualizaComposicoes(trens, i));
             // Imprime a visualização
             System.out.println(print);
 
         }
 
+    }
+
+    public static String vizualizaComposicoes(PatioComposicoes trens, int i){
+        // Inicializa strings com valores de cores
+        String reset = "\u001B[0m";
+        String purple = "\u001B[35m";
+        String cyan = "\u001B[36m";
+
+        // Inicializa uma string vazia
+        String print = "";
+
+        // Identifica cada carro da composição
+        for (int k = 0; k < trens.getComposicao(i).getQtdadeCarros(); k++) {
+
+            // Caso o carro seja uma locomotiva
+            if (trens.getComposicao(i).getCarro(k) instanceof Locomotiva)
+                print += purple + "L" + trens.getComposicao(i).getCarro(k).getIdentificador() + reset;
+
+                // Caso o carro seja um vagão
+            else
+                print += cyan + "V" + trens.getComposicao(i).getCarro(k).getIdentificador() + reset;
+
+            // Caso não seja o último elemento é preciso concatenar a ligação
+            if (k < trens.getComposicao(i).getQtdadeCarros() - 1)
+                print += "---";
+        }
+        return print;
     }
 
     /**
@@ -903,9 +908,9 @@ public class App{
         return result;
     }
 
-    public static String addEspaços(int n){
+    public static String addEspacos(int n, int s){
         String res ="";
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n - s; i++) {
             res += " ";
         }
         return res;
@@ -915,18 +920,54 @@ public class App{
     public static String[] retornaInfo(){
         String[] res = new String[garagemLocomotivas.totalLocomotivas()];
 
-        for (int i = 0; i < garagemVagoes.totalVagoes(); i++) {
+        for (int i = 0; i < garagemLocomotivas.totalLocomotivas(); i++) {
             res[i] = "";
 
-            res[i] += garagemVagoes.getVagao(i).getIdentificador();
-            res[i] += addEspaços(8);
+            res[i] += garagemLocomotivas.getLocomotiva(i).getIdentificador();
+            res[i] += addEspacos(8, String.valueOf(garagemLocomotivas.getLocomotiva(i).getIdentificador()).length());
 
             res[i] += "|";
 
-            res[i] += garagemVagoes.getVagao(i).getCapacidadeCarga();
-            res[i] += addEspaços(16);
+            res[i] += garagemLocomotivas.getLocomotiva(i).getPesoMax();
+            res[i] += addEspacos(16, String.valueOf(garagemLocomotivas.getLocomotiva(i).getPesoMax()).length());
 
             res[i] += "|";
+
+            res[i] += garagemLocomotivas.getLocomotiva(i).getQtdadeMaxVagoes();
+            res[i] += addEspacos(16, String.valueOf(garagemLocomotivas.getLocomotiva(i).getQtdadeMaxVagoes()).length());
+
+            res[i] += "|";
+        }
+        return res;
+    }
+
+
+    public static String[] retornaInfoTrens(){
+        String[] res = new String[patioComposicoes.totalComposicoes()];
+
+        for (int i = 0; i < patioComposicoes.totalComposicoes(); i++) {
+            res[i] = ("");
+
+            res[i] += (patioComposicoes.getComposicao(i).getIdentificador());
+            res[i] += addEspacos(8, String.valueOf(patioComposicoes.getComposicao(i).getIdentificador()).length());
+            res[i] += "|";
+
+            res[i] += (patioComposicoes.getComposicao(i).getQtdadeLocomotivas());
+            res[i] += addEspacos(31, String.valueOf(patioComposicoes.getComposicao(i).getQtdadeLocomotivas()).length());
+            res[i] += "|";
+
+            res[i] += (patioComposicoes.getComposicao(i).getQtdadeVagoes());
+            res[i] += addEspacos(26, String.valueOf(patioComposicoes.getComposicao(i).getQtdadeVagoes()).length());
+            res[i] += "|";
+
+            res[i] += (patioComposicoes.getComposicao(i).getPesoAtual());
+            res[i] += addEspacos(18, String.valueOf(patioComposicoes.getComposicao(i).getPesoAtual()).length());
+            res[i] += "|";
+
+            String print = (vizualizaComposicoes(patioComposicoes, i));
+            // Imprime a visualização
+            res[i] += (print);
+
         }
         return res;
     }
