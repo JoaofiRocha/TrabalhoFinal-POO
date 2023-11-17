@@ -71,6 +71,11 @@ public class Vagao extends Carro {
         return super.compareTo(outro);
     }
 
+    public String toString()
+    {
+        return "ID: " + getIdentificador() + " | Carga Máxima: " + getCapacidadeCarga() + " | ";
+    }
+
 }
 
 

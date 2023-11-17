@@ -917,6 +917,47 @@ public class App{
     }
 
 
+    public static Composicao[] composicoesToList()
+    {
+        Composicao[] res = new Composicao[patioComposicoes.totalComposicoes()];
+
+        for (int i = 0; i < patioComposicoes.totalComposicoes(); i++)
+        {
+            res[i] = patioComposicoes.getComposicao(i);
+        }
+
+        return res;
+    }
+
+    public static Locomotiva[] locomotivasToList()
+    {
+        Locomotiva[] res = new Locomotiva[garagemLocomotivas.totalLocomotivas()];
+
+        for (int i = 0; i < garagemLocomotivas.totalLocomotivas(); i++)
+        {
+            res[i] = garagemLocomotivas.getLocomotiva(i);
+        }
+
+        return res;
+    }
+
+    public static Vagao[] vagoesToList()
+    {
+        Vagao[] res = new Vagao[garagemVagoes.totalVagoes()];
+
+        for (int i = 0; i < garagemVagoes.totalVagoes(); i++)
+        {
+            res[i] = garagemVagoes.getVagao(i);
+        }
+
+        return res;
+    }
+
+    public static void engata(Locomotiva l)
+    {
+
+    }
+
     public static String[] retornaInfo(){
         String[] res = new String[garagemLocomotivas.totalLocomotivas()];
 

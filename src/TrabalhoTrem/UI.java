@@ -2,8 +2,7 @@ package TrabalhoTrem;
 import javax.swing.*;
 import java.awt.*;
 
-import static TrabalhoTrem.App.retornaInfo;
-import static TrabalhoTrem.App.retornaInfoTrens;
+import static TrabalhoTrem.App.*;
 
 public class UI{
     private JFrame frame;
@@ -29,7 +28,7 @@ public class UI{
         criarTrem.addActionListener(e -> {
             JPanel panelCriar = new JPanel();
             frame.setContentPane(panelCriar);
-            JTextField id = addTextField(panelCriar, "ID");
+            JTextField id = addTextField(panelCriar, "ID do Trem");
 
             // Cria e adiciona botoes
             JButton voltar = new JButton("Voltar");
@@ -37,20 +36,116 @@ public class UI{
             panelCriar.add(proximo);
             panelCriar.add(voltar);
 
-            JList listaLocomotivas = new JList(retornaInfo());
-            panelCriar.add(listaLocomotivas);
-            listaLocomotivas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-            JScrollPane listScroller = new JScrollPane(listaLocomotivas);
-
-            panel.setLayout(new BorderLayout());
-            panelCriar.add(listScroller);
-
-
+            // Refresh
             frame.revalidate();
             frame.repaint();
             voltar.addActionListener(e1 -> {
                 returnToMenu();
+            });
+
+            // Adicionar locomotivas
+            proximo.addActionListener(l -> {
+                int idTrem = Integer.parseInt(id.getText());
+
+                JPanel panelCriar2 = new JPanel();
+                frame.setContentPane(panelCriar2);
+                JLabel listaLocomotivasLabel = new JLabel("Locomotivas");
+                panelCriar2.add(listaLocomotivasLabel);
+                JList listaLocomotivas = new JList(App.locomotivasToList());
+                panelCriar2.add(listaLocomotivas);
+                listaLocomotivasLabel.setLabelFor(listaLocomotivas);
+                listaLocomotivas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                JScrollPane listScroller = new JScrollPane(listaLocomotivas);
+                panelCriar2.add(listScroller);
+                JButton voltar2 = new JButton("Voltar");
+                panelCriar2.add(voltar2);
+                JButton adicionar2 = new JButton("Adicionar");
+                panelCriar2.add(adicionar2);
+                JButton proximo2 = new JButton("Proximo");
+                panelCriar2.add(proximo2);
+                panel.setLayout(new BorderLayout());
+                Locomotiva d = null;
+
+                // Tenta criar o trem com a id solicitada, caso já exista, retorna para o menu anterior
+                Composicao trem = null;
+                try {
+                    trem = new Composicao(idTrem, patioComposicoes);
+                } catch (IDJaEmUsoException ex) {
+                    frame.setContentPane(panelCriar);
+                    frame.revalidate();
+                    frame.repaint();
+                }
+
+                // Refresh
+                frame.revalidate();
+                frame.repaint();
+
+                voltar2.addActionListener(e1 -> {
+                    frame.setContentPane(panelCriar);
+                    frame.revalidate();
+                    frame.repaint();
+                });
+
+                adicionar2.addActionListener(a ->
+                {
+                    Locomotiva loc = (Locomotiva) listaLocomotivas.getSelectedValue();
+                });
+
+                // Adicionar vagoes
+                proximo2.addActionListener(a -> {
+                JPanel panelCriar3 = new JPanel();
+                frame.setContentPane(panelCriar3);
+                JLabel listaVagoesLabel = new JLabel("Vagoes");
+                panelCriar3.add(listaVagoesLabel);
+                JList listaVagoes = new JList(App.vagoesToList());
+                panelCriar3.add(listaVagoes);
+                listaVagoesLabel.setLabelFor(listaVagoes);
+                listaVagoes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                JScrollPane listScroller2 = new JScrollPane(listaVagoes);
+                panelCriar3.add(listScroller2);
+                JButton voltar3 = new JButton("Voltar");
+                panelCriar3.add(voltar3);
+                JButton adicionar3 = new JButton("Adicionar");
+                panelCriar3.add(adicionar3);
+                JButton proximo3 = new JButton("Proximo");
+                panelCriar3.add(proximo3);
+                panel.setLayout(new BorderLayout());
+
+
+                frame.revalidate();
+                frame.repaint();
+
+                voltar3.addActionListener(e1 -> {
+                    frame.setContentPane(panelCriar2);
+                    frame.revalidate();
+                    frame.repaint();
+                });
+
+                adicionar3.addActionListener(b ->
+                {
+                    Vagao vag = (Vagao) listaVagoes.getSelectedValue();
+                });
+
+                // Finalizar trem
+                proximo3.addActionListener(c -> {
+                    JPanel panelCriar4 = new JPanel();
+                    frame.setContentPane(panelCriar4);
+                    JLabel fim = new JLabel("Trem criado com sucesso!");
+                    panelCriar4.add(fim);
+                    JButton voltar4 = new JButton("Voltar ao Menu");
+                    panelCriar4.add(voltar4);
+                    panel.setLayout(new BorderLayout());
+
+                    frame.revalidate();
+                    frame.repaint();
+
+                    voltar4.addActionListener(e1 -> {
+                        returnToMenu();
+                    });
+                });
+
+                });
+
             });
 
             id.addActionListener(e1 -> {
@@ -66,7 +161,7 @@ public class UI{
             frame.setContentPane(panelLista);
 
             JButton voltarB = new JButton("Voltar");
-            JList listaLocomotivas = new JList(retornaInfoTrens());
+            JList listaLocomotivas = new JList(App.composicoesToList());
             JScrollPane scrollTrem = new JScrollPane();
 
             scrollTrem.setViewportView(listaLocomotivas);
@@ -86,6 +181,13 @@ public class UI{
             voltarB.addActionListener(e1 -> {
                 returnToMenu();
             });
+        });
+
+        // Salvar Trens
+        salvarTrem.addActionListener(a -> {
+            App.salvar("loc.csv", App.salvar(garagemLocomotivas));
+            App.salvar("vag.csv", App.salvar(garagemVagoes));
+            App.salvar("comp.csv", App.salvar(patioComposicoes));
         });
 
 
@@ -111,5 +213,10 @@ public class UI{
         textField.setEditable(true);
         panel.add(textField);
         return textField;
+    }
+
+    private void engata(Locomotiva locomotiva, Composicao trem)
+    {
+        trem.engata(locomotiva);
     }
 }

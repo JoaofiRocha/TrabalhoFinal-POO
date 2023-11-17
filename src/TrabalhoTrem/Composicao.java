@@ -345,4 +345,9 @@ public class Composicao implements Comparable<Composicao> {
     {
         return Integer.compare(this.getIdentificador(), outro.getIdentificador());
     }
+
+    public String toString()
+    {
+        return "ID: " + id + " | Locomotivas: " + getQtdadeLocomotivas() + " | Vagões: " + getQtdadeVagoes() + " | Peso do Trem: " + maxPesoReal + " |";
+    }
 }

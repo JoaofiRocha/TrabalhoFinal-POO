@@ -73,7 +73,10 @@ public class Locomotiva extends Carro
         return super.compareTo(outro);
     }
 
-
+    public String toString()
+    {
+        return "ID: " + getIdentificador() + " | Peso Máximo: " + getPesoMax() + " | Quantidade Máxima de Vagões: " + getQtdadeMaxVagoes() + " | ";
+    }
 
 
 
