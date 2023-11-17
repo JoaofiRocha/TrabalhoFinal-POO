@@ -74,7 +74,7 @@ public class App{
         try {
             trem = new Composicao(n, patioComposicoes);
         } catch (IDJaEmUsoException e) {
-            throw new RuntimeException(e);
+            throw new IDJaEmUsoException(e.getMessage());
         }
     }
 

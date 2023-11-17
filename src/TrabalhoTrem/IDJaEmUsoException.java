@@ -4,7 +4,7 @@ package TrabalhoTrem;
  * @author ricardo.rossa@edu.pucrs.br
  * @version 05/09/2023
  */
-public class IDJaEmUsoException extends Exception {
+public class IDJaEmUsoException extends RuntimeException {
     /**
      * Exceção que lança uma mensagem ao usuário caso o ID já esteja em uso.
      * @param message mensagem que pede para o usuário colocar outro ID.

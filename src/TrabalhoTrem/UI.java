@@ -69,7 +69,7 @@ public class UI{
                 // Tenta criar o trem com a id solicitada, caso já exista, retorna para o menu anterior
                 try {
                     App.id(idTrem);
-                } catch (RuntimeException ex) {
+                } catch (IDJaEmUsoException ex) {
                     frame.setContentPane(panelCriar);
                     frame.revalidate();
                     frame.repaint();
