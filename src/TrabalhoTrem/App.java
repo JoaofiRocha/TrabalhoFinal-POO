@@ -826,6 +826,7 @@ public class App{
                 comp.desengata(garagemVagoes);
             }
         } while (comp.getQtdadeCarros() > 0);
+        patioComposicoes.deletarComposicao(comp);
     }
 }
 
