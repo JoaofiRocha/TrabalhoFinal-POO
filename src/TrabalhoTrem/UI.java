@@ -1,5 +1,6 @@
 package TrabalhoTrem;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 import static TrabalhoTrem.App.*;
@@ -9,21 +10,56 @@ public class UI{
     private JPanel panel;
 
     public void createAndShow(){
+        JFrame.setDefaultLookAndFeelDecorated(true);
+        Font defaultFont = new Font("Arial", Font.PLAIN, 20);
+        Font bold = new Font("Arial", Font.BOLD, 22);
+        UIManager.put("TextField.font", defaultFont);
+        UIManager.put("Button.font", defaultFont);
+        UIManager.put("Label.font", defaultFont);
+        UIManager.put("List.font", defaultFont);
+
         panel = new JPanel();
         frame = new JFrame("Trem");
 
+
         //Menu
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        Panel cardCriar = new Panel();
+        cardCriar.setLayout(new CardLayout(50,10));
         JButton criarTrem = new JButton("Criar Trem");
+        cardCriar.add(criarTrem);
+        cardCriar.setSize(200,100);
+        panel.add(cardCriar);
+
+        Panel cardEditar = new Panel();
+        cardEditar.setLayout(new CardLayout(50,10));
         JButton editarTrem = new JButton("Editar Trem");
+        cardEditar.add(editarTrem);
+        cardEditar.setSize(200,100);
+        panel.add(cardEditar);
+
+        Panel cardListar = new Panel();
+        cardListar.setLayout(new CardLayout(50,10));
         JButton listarTrem = new JButton("Listar Trem");
+        cardListar.add(listarTrem);
+        cardListar.setSize(200,100);
+        panel.add(cardListar);
+
+        Panel cardDeletar = new Panel();
+        cardDeletar.setLayout(new CardLayout(50,10));
         JButton deletarTrem = new JButton("Deletar Trem");
+        cardDeletar.add(deletarTrem);
+        cardDeletar.setSize(200,100);
+        panel.add(cardDeletar);
+
+        Panel cardSalvar = new Panel();
+        cardSalvar.setLayout(new CardLayout(50,10));
         JButton salvarTrem = new JButton("Salvar Trem");
-        panel.add(criarTrem);
-        panel.add(editarTrem);
-        panel.add(listarTrem);
-        panel.add(deletarTrem);
-        panel.add(salvarTrem);
+        cardSalvar.add(salvarTrem);
+        cardSalvar.setSize(200,100);
+        panel.add(cardSalvar);
+
 
         // Listas de Locomotivas e Vagoes
         DefaultListModel<Locomotiva> listModelL = new DefaultListModel<>();
@@ -52,13 +88,31 @@ public class UI{
         criarTrem.addActionListener(e -> {
             JPanel panelCriar = new JPanel();
             frame.setContentPane(panelCriar);
-            JTextField id = addTextField(panelCriar, "ID do Trem");
+            panelCriar.setLayout(new BoxLayout(panelCriar, BoxLayout.Y_AXIS));
+
+            panelCriar.add(Box.createVerticalGlue());
+            JPanel panelId = new JPanel();
+            panelId.setLayout(new BoxLayout(panelId, BoxLayout.X_AXIS));
+            JPanel panelId1 = new JPanel();
+            panelId1.setLayout(new CardLayout(10,10));
+            JTextField id = addTextField(panelId, "ID do Trem");
+            id.setFont(bold);
+            id.setColumns(20);
+            id.setMaximumSize(new Dimension(200, 60));
+            panelId1.setSize(100,100);
+            panelId1.add(id);
+            panelId.add(panelId1);
+            panelId.setMaximumSize(new Dimension(700,10000));
+            panelCriar.add(panelId);
+            panelCriar.add(Box.createVerticalGlue());
 
             // Cria e adiciona botoes
+            JPanel panelBotoesCriar = new JPanel();
             JButton voltar = new JButton("Voltar");
             JButton proximo = new JButton("Proximo");
-            panelCriar.add(proximo);
-            panelCriar.add(voltar);
+            panelBotoesCriar.add(voltar);
+            panelBotoesCriar.add(proximo);
+            panelCriar.add(panelBotoesCriar);
 
             // Refresh
             frame.revalidate();
@@ -89,8 +143,12 @@ public class UI{
                 panelCriar2.add(adicionar2);
                 JButton proximo2 = new JButton("Proximo");
                 panelCriar2.add(proximo2);
-                JTextField montagem = addTextField(panelCriar2, "Montagem");
+
+                JPanel panelMontagem = new JPanel();
+                JTextField montagem = addTextField(panelMontagem, "Montagem");
                 montagem.setEditable(false);
+                montagem.setColumns(35);
+                panelCriar2.add(panelMontagem);
                 panel.setLayout(new BorderLayout());
 
                 // Tenta criar o trem com a id solicitada, caso jÃ¡ exista, retorna para o menu anterior
@@ -131,19 +189,28 @@ public class UI{
                         App.calc();
                         JPanel panelCriar3 = new JPanel();
                         frame.setContentPane(panelCriar3);
+                        panelCriar3.setLayout(new BoxLayout(panelCriar3, BoxLayout.Y_AXIS));
+
+                        JPanel panelListaVagoes = new JPanel();
                         JLabel listaVagoesLabel = new JLabel("Vagoes");
-                        panelCriar3.add(listaVagoesLabel);
-                        panelCriar3.add(listaVagoes);
                         listaVagoesLabel.setLabelFor(listaVagoes);
+                        panelListaVagoes.add(listaVagoesLabel);
+                        panelListaVagoes.add(listaVagoes);
                         listaVagoes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                        listaVagoes.setMaximumSize(new Dimension(300,100));
                         JScrollPane listScroller2 = new JScrollPane(listaVagoes);
-                        panelCriar3.add(listScroller2);
-                        panelCriar3.add(voltar);
+                        panelListaVagoes.add(listScroller2);
+                        panelCriar3.add(panelListaVagoes);
+
+                        JPanel panelBotoesAddVagoes = new JPanel();
                         JButton adicionar3 = new JButton("Adicionar");
-                        panelCriar3.add(adicionar3);
+                        panelBotoesAddVagoes.add(adicionar3);
                         JButton proximo3 = new JButton("Proximo");
-                        panelCriar3.add(proximo3);
-                        panelCriar3.add(montagem);
+                        panelBotoesAddVagoes.add(proximo3);
+                        panelBotoesAddVagoes.add(voltar);
+                        panelCriar3.add(panelBotoesAddVagoes);
+
+                        panelCriar3.add(panelMontagem);
                         panel.setLayout(new BorderLayout());
                         frame.revalidate();
                         frame.repaint();
@@ -463,7 +530,7 @@ public class UI{
 
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600,350);
+        frame.setSize(750,350);
         frame.getContentPane().add(panel);
         frame.setResizable(false);
         frame.setVisible(true);
