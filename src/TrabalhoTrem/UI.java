@@ -7,6 +7,7 @@ import static TrabalhoTrem.App.*;
 public class UI{
     private JFrame frame;
     private JPanel panel;
+
     public void createAndShow(){
         panel = new JPanel();
         frame = new JFrame("Trem");
@@ -43,6 +44,7 @@ public class UI{
         for (Composicao composicao : App.composicoesToList()) {
             listModelC.addElement(composicao);
         }
+
         JList listaComposicoes = new JList(listModelC);
         DefaultListModel<Composicao> defaultListModelC = (DefaultListModel<Composicao>) listaComposicoes.getModel();
 
@@ -63,12 +65,7 @@ public class UI{
             frame.repaint();
 
             voltar.addActionListener(e1 -> {
-                for (int i = 0; i < oldListModelL.size(); i++) {
-                    listModelL.addElement(oldListModelL.getElementAt(i));
-                }
-                for (int i = 0; i < oldListModelV.size(); i++) {
-                    listModelV.addElement(oldListModelV.getElementAt(i));
-                }
+                App.composicoesToList();
                 returnToMenu();
                 App.reset();
             });
@@ -96,10 +93,11 @@ public class UI{
                 montagem.setEditable(false);
                 panel.setLayout(new BorderLayout());
 
-                // Tenta criar o trem com a id solicitada, caso já exista, retorna para o menu anterior
+                // Tenta criar o trem com a id solicitada, caso jÃ¡ exista, retorna para o menu anterior
                 try {
                     App.id(idTrem);
                 } catch (IDJaEmUsoException ex) {
+                    System.out.println(ex.getMessage());
                     panelCriar.add(voltar);
                     frame.setContentPane(panelCriar);
                     frame.revalidate();
@@ -152,41 +150,41 @@ public class UI{
 
 
 
-                adicionar3.addActionListener(b ->
-                {
-                    if (App.check(((Vagao) listaVagoes.getSelectedValue()).getCapacidadeCarga()))
-                    {
-                        Vagao vag = (Vagao) listaVagoes.getSelectedValue();
-                        App.addVagao(vag);
-                        DefaultListModel<Vagao> defaultListModelV = (DefaultListModel<Vagao>) listaVagoes.getModel();
-                        oldListModelV.addElement(defaultListModelV.getElementAt(listaVagoes.getSelectedIndex()));
-                        defaultListModelV.removeElementAt(listaVagoes.getSelectedIndex());
-                        montagem.setText(App.visualComposition(vag));
-                        listaVagoes.clearSelection();
-                        listaVagoes.repaint();
-                    }
+                        adicionar3.addActionListener(b ->
+                        {
+                            if (App.check(((Vagao) listaVagoes.getSelectedValue()).getCapacidadeCarga()))
+                            {
+                                Vagao vag = (Vagao) listaVagoes.getSelectedValue();
+                                App.addVagao(vag);
+                                DefaultListModel<Vagao> defaultListModelV = (DefaultListModel<Vagao>) listaVagoes.getModel();
+                                oldListModelV.addElement(defaultListModelV.getElementAt(listaVagoes.getSelectedIndex()));
+                                defaultListModelV.removeElementAt(listaVagoes.getSelectedIndex());
+                                montagem.setText(App.visualComposition(vag));
+                                listaVagoes.clearSelection();
+                                listaVagoes.repaint();
+                            }
 
-                });
+                        });
 
-                // Finalizar trem
-                proximo3.addActionListener(c -> {
-                    if (App.check(2))
-                    {
-                        App.addTrem();
-                        JPanel panelCriar4 = new JPanel();
-                        frame.setContentPane(panelCriar4);
-                        JLabel fim = new JLabel("Trem criado com sucesso!");
-                        panelCriar4.add(fim);
-                        panelCriar4.add(voltar);
-                        panel.setLayout(new BorderLayout());
-                        defaultListModelC.addElement(App.getTrem());
-                        listModelC.addElement(App.getTrem());
-                        listaComposicoes.revalidate();
-                        listaComposicoes.repaint();
-                        frame.revalidate();
-                        frame.repaint();
-                    }
-                });
+                        // Finalizar trem
+                        proximo3.addActionListener(c -> {
+                            if (App.check(2))
+                            {
+                                listModelC.addElement(App.getTrem());
+                                App.addTrem();
+
+                                JPanel panelCriar4 = new JPanel();
+                                frame.setContentPane(panelCriar4);
+                                JLabel fim = new JLabel("Trem criado com sucesso!");
+                                panelCriar4.add(fim);
+                                panelCriar4.add(voltar);
+                                panel.setLayout(new BorderLayout());
+                                listaComposicoes.revalidate();
+                                listaComposicoes.repaint();
+                                frame.revalidate();
+                                frame.repaint();
+                            }
+                        });
                     }
                 });
 
@@ -314,6 +312,16 @@ public class UI{
                 });
 
                 removerUltimo.addActionListener(e1 -> {
+                    if (editar.getLast() instanceof Locomotiva && editar.getQtdadeLocomotivas() >= 2) {
+                        for (int i = 0; i < oldListModelL.size(); i++) {
+                            listModelL.addElement(oldListModelL.getElementAt(i));
+                        }
+                    }
+                    else if (editar.getLast() instanceof Vagao) {
+                        for (int i = 0; i < oldListModelV.size(); i++) {
+                            listModelV.addElement(oldListModelV.getElementAt(i));
+                        }
+                    }
                     App.removeLast(editar);
                 });
 
@@ -437,6 +445,12 @@ public class UI{
                 Composicao deletar = (Composicao) listaComposicoes.getSelectedValue();
                 defaultListModelC.removeElementAt(listaComposicoes.getSelectedIndex());
                 App.deleteComposition(deletar);
+                for (int i = 0; i < oldListModelL.size(); i++) {
+                    listModelL.addElement(oldListModelL.getElementAt(i));
+                }
+                for (int i = 0; i < oldListModelV.size(); i++) {
+                    listModelV.addElement(oldListModelV.getElementAt(i));
+                }
             });
         });
 
@@ -451,6 +465,7 @@ public class UI{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600,350);
         frame.getContentPane().add(panel);
+        frame.setResizable(false);
         frame.setVisible(true);
 
     }
