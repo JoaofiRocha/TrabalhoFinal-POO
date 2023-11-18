@@ -156,7 +156,8 @@ public class UI{
                     App.id(idTrem);
                 } catch (IDJaEmUsoException ex) {
                     System.out.println(ex.getMessage());
-                    panelCriar.add(voltar);
+                    panelBotoesCriar.add(voltar);
+                    panelBotoesCriar.add(proximo);
                     frame.setContentPane(panelCriar);
                     frame.revalidate();
                     frame.repaint();
@@ -271,16 +272,18 @@ public class UI{
             JButton selecionar = new JButton("Selecionar");
             JButton voltar = new JButton("Voltar");
             //JList listaComposicoes = new JList(App.composicoesToList());
-            JScrollPane scrollTrem = new JScrollPane();
 
-            scrollTrem.setViewportView(listaComposicoes);
-            scrollTrem.setPreferredSize(new Dimension(280,200));
-            scrollTrem.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-            scrollTrem.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-            listaComposicoes.setLayoutOrientation(JList.VERTICAL);
+            JPanel panelListaEditar = new JPanel();
+            JLabel listaComposicaoLabel = new JLabel("Composições");
+            listaComposicaoLabel.setLabelFor(listaComposicoes);
+            panelListaEditar.add(listaComposicaoLabel);
+            panelListaEditar.add(listaComposicoes);
             listaComposicoes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            listaVagoes.setMaximumSize(new Dimension(300,100));
+            JScrollPane listScroller1 = new JScrollPane(listaComposicoes);
+            panelListaEditar.add(listScroller1);
+            panelEditar.add(panelListaEditar);
 
-            panelEditar.add(scrollTrem);
             panelEditar.add(selecionar);
             panelEditar.add(voltar);
 
@@ -296,18 +299,49 @@ public class UI{
                 Composicao editar = (Composicao) listaComposicoes.getSelectedValue();
                 App.loadComposition(editar);
                 JPanel panelEdicao = new JPanel();
-                JButton inserirLocomotiva = new JButton("Inserir Locomotiva");
-                JButton inserirVagao = new JButton("Inserir Vagao");
-                JButton removerUltimo = new JButton("Remover Ultimo Elemento");
-                JButton listarLocomotivas = new JButton("Locomotivas Livres");
-                JButton listarVagoes = new JButton("Vagoes Livres");
+                panelEdicao.setLayout(new BoxLayout(panelEdicao, BoxLayout.Y_AXIS));
 
-                panelEdicao.add(inserirLocomotiva);
-                panelEdicao.add(inserirVagao);
-                panelEdicao.add(removerUltimo);
-                panelEdicao.add(listarLocomotivas);
-                panelEdicao.add(listarVagoes);
-                panelEdicao.add(voltar);
+                JPanel cardInserirLocomotiva = new JPanel();
+                cardInserirLocomotiva.setLayout(new CardLayout(50,10));
+                JButton inserirLocomotiva = new JButton("Inserir Locomotiva");
+                cardInserirLocomotiva.add(inserirLocomotiva);
+                cardInserirLocomotiva.setSize(200,100);
+                panelEdicao.add(cardInserirLocomotiva);
+
+                JPanel cardInserirVagao = new JPanel();
+                cardInserirVagao.setLayout(new CardLayout(50,10));
+                JButton inserirVagao = new JButton("Inserir Vagao");
+                cardInserirVagao.add(inserirVagao);
+                cardInserirVagao.setSize(200,100);
+                panelEdicao.add(cardInserirVagao);
+
+                JPanel cardRemoverUltimo = new JPanel();
+                cardRemoverUltimo.setLayout(new CardLayout(50,10));
+                JButton removerUltimo = new JButton("Remover Ultimo Elemento");
+                cardRemoverUltimo.add(removerUltimo);
+                cardRemoverUltimo.setSize(200,100);
+                panelEdicao.add(cardRemoverUltimo);
+
+                JPanel cardListarLocomotivas = new JPanel();
+                cardListarLocomotivas.setLayout(new CardLayout(50,10));
+                JButton listarLocomotivas = new JButton("Locomotivas Livres");
+                cardListarLocomotivas.add(listarLocomotivas);
+                cardListarLocomotivas.setSize(200,100);
+                panelEdicao.add(cardListarLocomotivas);
+
+                JPanel cardListarVagoes = new JPanel();
+                cardListarVagoes.setLayout(new CardLayout(50,10));
+                JButton listarVagoes = new JButton("Vagoes Livres");
+                cardListarVagoes.add(listarVagoes);
+                cardListarVagoes.setSize(200,100);
+                panelEdicao.add(cardListarVagoes);
+
+                JPanel cardVoltar = new JPanel();
+                cardVoltar.setLayout(new CardLayout(50,10));
+                cardVoltar.add(voltar);
+                cardVoltar.setSize(200,100);
+                panelEdicao.add(cardVoltar);
+
                 frame.setContentPane(panelEdicao);
                 frame.revalidate();
                 frame.repaint();
@@ -348,17 +382,24 @@ public class UI{
                         App.calc();
                         JPanel panelVag = new JPanel();
                         frame.setContentPane(panelVag);
+                        panelVag.setLayout(new BoxLayout(panelVag, BoxLayout.Y_AXIS));
+
+                        JPanel panelListaVag = new JPanel();
                         JLabel listaVagoesLabel = new JLabel("Vagoes");
-                        panelVag.add(listaVagoesLabel);
-                        panelVag.add(listaVagoes);
+                        panelListaVag.add(listaVagoesLabel);
+                        panelListaVag.add(listaVagoes);
                         listaVagoesLabel.setLabelFor(listaVagoes);
                         listaVagoes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                         JScrollPane listScroller2 = new JScrollPane(listaVagoes);
-                        panelVag.add(listScroller2);
-                        panelVag.add(voltar);
+                        panelListaVag.add(listScroller2);
+                        panelVag.add(panelListaVag);
+
+                        JPanel panelBotoesAddVagoes = new JPanel();
+                        panelBotoesAddVagoes.add(voltar);
                         JButton adicionar3 = new JButton("Adicionar");
-                        panelVag.add(adicionar3);
-                        panelVag.add(voltar);
+                        panelBotoesAddVagoes.add(adicionar3);
+                        panelVag.add(panelBotoesAddVagoes);
+
                         panel.setLayout(new BorderLayout());
                         frame.revalidate();
                         frame.repaint();
@@ -395,22 +436,24 @@ public class UI{
                 listarLocomotivas.addActionListener(e1 -> {
                     JPanel panelLista = new JPanel();
                     frame.setContentPane(panelLista);
+                    panelLista.setLayout(new BoxLayout(panelLista, BoxLayout.Y_AXIS));
 
                     JButton voltarB = new JButton("Voltar");
-                    JList listaLocomotivas2 = new JList(App.locomotivasToList());
-                    JScrollPane scrollLoc = new JScrollPane();
 
-                    scrollLoc.setViewportView(listaLocomotivas2);
-                    scrollLoc.setPreferredSize(new Dimension(280,200));
-                    scrollLoc.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-                    scrollLoc.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+                    JPanel panelListaLoc = new JPanel();
+                    JLabel listaLocLabel = new JLabel("Locomotivas");
+                    listaLocLabel.setLabelFor(listaLocomotivas);
+                    panelListaLoc.add(listaLocLabel);
+                    panelListaLoc.add(listaLocomotivas);
+                    listaLocomotivas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                    listaLocomotivas.setMaximumSize(new Dimension(300,100));
+                    JScrollPane listScroller = new JScrollPane(listaLocomotivas);
+                    panelListaLoc.add(listScroller);
+                    listaLocomotivas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                    panelLista.add(panelListaLoc);
 
-                    listaLocomotivas2.setLayoutOrientation(JList.VERTICAL);
-                    listaLocomotivas2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-                    panel.setLayout(new BorderLayout());
-                    panelLista.add(scrollLoc, BorderLayout.CENTER);
-                    panelLista.add(voltarB, BorderLayout.SOUTH);
+                    panelLista.add(voltarB);
+                    panelLista.add(Box.createVerticalGlue());
                     frame.revalidate();
                     frame.repaint();
 
@@ -422,22 +465,24 @@ public class UI{
                 listarVagoes.addActionListener(e1 -> {
                     JPanel panelLista = new JPanel();
                     frame.setContentPane(panelLista);
+                    panelLista.setLayout(new BoxLayout(panelLista, BoxLayout.Y_AXIS));
 
                     JButton voltarB = new JButton("Voltar");
-                    JList listaVagoes2 = new JList(App.vagoesToList());
-                    JScrollPane scrollVag = new JScrollPane();
 
-                    scrollVag.setViewportView(listaVagoes2);
-                    scrollVag.setPreferredSize(new Dimension(280,200));
-                    scrollVag.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-                    scrollVag.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+                    JPanel panelListaVag = new JPanel();
+                    JLabel listaVagLabel = new JLabel("Vagões");
+                    listaVagLabel.setLabelFor(listaVagoes);
+                    panelListaVag.add(listaVagLabel);
+                    panelListaVag.add(listaVagoes);
+                    listaVagoes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                    listaVagoes.setMaximumSize(new Dimension(300,100));
+                    JScrollPane listScroller = new JScrollPane(listaVagoes);
+                    panelListaVag.add(listScroller);
+                    listaVagoes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                    panelLista.add(panelListaVag);
 
-                    listaVagoes2.setLayoutOrientation(JList.VERTICAL);
-                    listaVagoes2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-                    panel.setLayout(new BorderLayout());
-                    panelLista.add(scrollVag, BorderLayout.CENTER);
-                    panelLista.add(voltarB, BorderLayout.SOUTH);
+                    panelLista.add(voltarB);
+                    panelLista.add(Box.createVerticalGlue());
                     frame.revalidate();
                     frame.repaint();
 
@@ -461,17 +506,19 @@ public class UI{
             //JList listaComposicoes = new JList(App.composicoesToList());
             JScrollPane scrollTrem = new JScrollPane();
 
-            scrollTrem.setViewportView(listaComposicoes);
-            scrollTrem.setPreferredSize(new Dimension(280,200));
-            scrollTrem.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-            scrollTrem.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-
-            listaComposicoes.setLayoutOrientation(JList.VERTICAL);
+            JPanel panelListarComposicoes = new JPanel();
+            JLabel listaComposicaoLabel = new JLabel("Composições");
+            listaComposicaoLabel.setLabelFor(listaComposicoes);
+            panelListarComposicoes.add(listaComposicaoLabel);
+            panelListarComposicoes.add(listaComposicoes);
             listaComposicoes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            listaVagoes.setMaximumSize(new Dimension(300,100));
+            JScrollPane listScroller = new JScrollPane(listaComposicoes);
+            panelListarComposicoes.add(listScroller);
+            listaComposicoes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            panelLista.add(panelListarComposicoes);
 
-            panel.setLayout(new BorderLayout());
-            panelLista.add(scrollTrem, BorderLayout.CENTER);
-            panelLista.add(voltarB, BorderLayout.SOUTH);
+            panelLista.add(voltarB);
             frame.revalidate();
             frame.repaint();
 
@@ -486,17 +533,21 @@ public class UI{
             JButton selecionar = new JButton("Excluir");
             JButton voltar = new JButton("Voltar");
             //JList listaComposicoes = new JList(App.composicoesToList());
-            JScrollPane scrollTrem = new JScrollPane();
 
-            scrollTrem.setViewportView(listaComposicoes);
-            scrollTrem.setPreferredSize(new Dimension(280,200));
-            scrollTrem.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-            scrollTrem.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
-            listaComposicoes.setLayoutOrientation(JList.VERTICAL);
+            JPanel panelListarDeletar = new JPanel();
+            JLabel listaComposicaoLabel = new JLabel("Composições");
+            listaComposicaoLabel.setLabelFor(listaComposicoes);
+            panelListarDeletar.add(listaComposicaoLabel);
+            panelListarDeletar.add(listaComposicoes);
             listaComposicoes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            listaVagoes.setMaximumSize(new Dimension(300,100));
+            JScrollPane listScroller = new JScrollPane(listaComposicoes);
+            panelListarDeletar.add(listScroller);
+            listaComposicoes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            listaComposicoes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            panelDeletar.add(panelListarDeletar);
 
-            panelDeletar.add(scrollTrem);
             panelDeletar.add(selecionar);
             panelDeletar.add(voltar);
 
