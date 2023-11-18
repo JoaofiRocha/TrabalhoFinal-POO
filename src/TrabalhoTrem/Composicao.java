@@ -280,6 +280,10 @@ public class Composicao implements Comparable<Composicao> {
        carros.remove(l);
     }
 
+    public Carro getLast()
+    {
+        return carros.get(carros.size() - 1);
+    }
     /**
      * Desengata o ultimo vagão engatado na composição
      * @param garagem Garagem que o vagao será armazenado

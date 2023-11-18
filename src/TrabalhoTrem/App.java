@@ -18,6 +18,11 @@ public class App{
     static GaragemVagoes garagemVagoes;
     static PatioComposicoes patioComposicoes;
     static Composicao trem;
+    static int maxVagoes = 0;
+    static double maxPeso = 0;
+    static int oldMaxVagoes = 0;
+    static double oldMaxPeso = 0;
+    static String montagemString = "";
 
     /**
      * Construtor Vazio da classe App (Para Javadoc)
@@ -83,9 +88,95 @@ public class App{
         trem.engata(loc, garagemLocomotivas);
     }
 
+    public static void addVagao (Vagao vag)
+    {
+        trem.engata(vag, garagemVagoes);
+    }
+
+    public static void calc()
+    {
+        trem.calcularCapacidadeReal();
+        maxVagoes = trem.getMaxVagoesReal();
+        maxPeso = trem.getMaxPesoReal();
+    }
+
+    public static boolean check(double peso)
+    {
+        oldMaxPeso = maxPeso;
+        oldMaxVagoes = maxVagoes;
+        maxPeso = maxPeso - peso;
+        maxVagoes = maxVagoes - 1;
+        if (maxVagoes >= 0 && maxPeso >= 0)
+        {
+            return true;
+        }
+        else
+        {
+            maxPeso = oldMaxPeso;
+            maxVagoes = oldMaxVagoes;
+            return false;
+        }
+    }
+
+
+    public static boolean check(int n)
+    {
+        if (n == 1 && trem.getQtdadeLocomotivas() == 0)
+            return false;
+        else if (n == 2 && trem.getQtdadeVagoes() == 0)
+            return false;
+        else if (n == 3 && trem.getQtdadeVagoes() > 0)
+            return false;
+        else
+            return true;
+    }
+
+    public static void addTrem()
+    {
+        patioComposicoes.setComposicao(trem);
+        reset();
+    }
+
     public static void reset()
     {
         trem = null;
+        maxPeso = 0;
+        maxVagoes = 0;
+        oldMaxPeso = 0;
+        oldMaxVagoes = 0;
+        montagemString = "";
+    }
+
+    public static String visualComposition(Locomotiva loc){
+        if (montagemString.equals(""))
+            montagemString = "L" + loc.getIdentificador();
+        else
+            montagemString += "---L" + loc.getIdentificador();
+        return montagemString;
+    }
+
+    public static String visualComposition(Vagao vag){
+        if (montagemString.equals(""))
+            montagemString = "V" + vag.getIdentificador();
+        else
+            montagemString += "---V" + vag.getIdentificador();
+        return montagemString;
+    }
+
+    public static void removeLast(Composicao comp) {
+        if (comp.getLast() instanceof Locomotiva && comp.getQtdadeLocomotivas() >= 2)
+            comp.desengata(garagemLocomotivas);
+        else if (comp.getLast() instanceof Vagao)
+            comp.desengata(garagemVagoes);
+    }
+
+    public static void loadComposition(Composicao comp) {
+        trem = comp;
+    }
+
+    public static Composicao getTrem()
+    {
+        return trem;
     }
 
     /**
@@ -723,6 +814,19 @@ public class App{
         return res;
     }
 
+    public static void deleteComposition(Composicao comp) {
+        do
+        {
+            if (comp.getLast() instanceof Locomotiva)
+            {
+                comp.desengata(garagemLocomotivas);
+            }
+            else
+            {
+                comp.desengata(garagemVagoes);
+            }
+        } while (comp.getQtdadeCarros() > 0);
+    }
 }
 
 
