@@ -352,6 +352,6 @@ public class Composicao implements Comparable<Composicao> {
 
     public String toString()
     {
-        return "ID: " + id + " | Locomotivas: " + getQtdadeLocomotivas() + " | Vagões: " + getQtdadeVagoes() + " | Peso do Trem: " + maxPesoReal + " |";
+        return "ID: " + id + " | Locomotivas: " + getQtdadeLocomotivas() + " | Vagões: " + getQtdadeVagoes() + " | Peso do Trem: " + pesoAtual + " |";
     }
 }

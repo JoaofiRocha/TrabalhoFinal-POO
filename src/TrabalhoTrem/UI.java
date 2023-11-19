@@ -55,7 +55,7 @@ public class UI{
 
         Panel cardSalvar = new Panel();
         cardSalvar.setLayout(new CardLayout(50,10));
-        JButton salvarTrem = new JButton("Salvar Trem");
+        JButton salvarTrem = new JButton("Salvar");
         cardSalvar.add(salvarTrem);
         cardSalvar.setSize(200,100);
         panel.add(cardSalvar);
@@ -109,7 +109,7 @@ public class UI{
             // Cria e adiciona botoes
             JPanel panelBotoesCriar = new JPanel();
             JButton voltar = new JButton("Voltar");
-            JButton proximo = new JButton("Proximo");
+            JButton proximo = new JButton("Próximo");
             panelBotoesCriar.add(voltar);
             panelBotoesCriar.add(proximo);
             panelCriar.add(panelBotoesCriar);
@@ -120,6 +120,14 @@ public class UI{
 
             voltar.addActionListener(e1 -> {
                 App.composicoesToList();
+                for (int i = 0; i < oldListModelL.size(); i++) {
+                    listModelL.addElement(oldListModelL.getElementAt(i));
+                }
+                for (int i = 0; i < oldListModelV.size(); i++) {
+                    listModelV.addElement(oldListModelV.getElementAt(i));
+                }
+                oldListModelL.clear();
+                oldListModelV.clear();
                 returnToMenu();
                 App.reset();
             });
@@ -141,7 +149,7 @@ public class UI{
                 panelCriar2.add(voltar);
                 JButton adicionar2 = new JButton("Adicionar");
                 panelCriar2.add(adicionar2);
-                JButton proximo2 = new JButton("Proximo");
+                JButton proximo2 = new JButton("Próximo");
                 panelCriar2.add(proximo2);
 
                 JPanel panelMontagem = new JPanel();
@@ -193,7 +201,7 @@ public class UI{
                         panelCriar3.setLayout(new BoxLayout(panelCriar3, BoxLayout.Y_AXIS));
 
                         JPanel panelListaVagoes = new JPanel();
-                        JLabel listaVagoesLabel = new JLabel("Vagoes");
+                        JLabel listaVagoesLabel = new JLabel("Vagões");
                         listaVagoesLabel.setLabelFor(listaVagoes);
                         panelListaVagoes.add(listaVagoesLabel);
                         panelListaVagoes.add(listaVagoes);
@@ -204,11 +212,11 @@ public class UI{
                         panelCriar3.add(panelListaVagoes);
 
                         JPanel panelBotoesAddVagoes = new JPanel();
+                        panelBotoesAddVagoes.add(voltar);
                         JButton adicionar3 = new JButton("Adicionar");
                         panelBotoesAddVagoes.add(adicionar3);
-                        JButton proximo3 = new JButton("Proximo");
+                        JButton proximo3 = new JButton("Próximo");
                         panelBotoesAddVagoes.add(proximo3);
-                        panelBotoesAddVagoes.add(voltar);
                         panelCriar3.add(panelBotoesAddVagoes);
 
                         panelCriar3.add(panelMontagem);
@@ -284,8 +292,8 @@ public class UI{
             panelListaEditar.add(listScroller1);
             panelEditar.add(panelListaEditar);
 
-            panelEditar.add(selecionar);
             panelEditar.add(voltar);
+            panelEditar.add(selecionar);
 
             frame.setContentPane(panelEditar);
             frame.revalidate();
@@ -310,14 +318,14 @@ public class UI{
 
                 JPanel cardInserirVagao = new JPanel();
                 cardInserirVagao.setLayout(new CardLayout(50,10));
-                JButton inserirVagao = new JButton("Inserir Vagao");
+                JButton inserirVagao = new JButton("Inserir Vagão");
                 cardInserirVagao.add(inserirVagao);
                 cardInserirVagao.setSize(200,100);
                 panelEdicao.add(cardInserirVagao);
 
                 JPanel cardRemoverUltimo = new JPanel();
                 cardRemoverUltimo.setLayout(new CardLayout(50,10));
-                JButton removerUltimo = new JButton("Remover Ultimo Elemento");
+                JButton removerUltimo = new JButton("Remover Último Elemento");
                 cardRemoverUltimo.add(removerUltimo);
                 cardRemoverUltimo.setSize(200,100);
                 panelEdicao.add(cardRemoverUltimo);
@@ -331,7 +339,7 @@ public class UI{
 
                 JPanel cardListarVagoes = new JPanel();
                 cardListarVagoes.setLayout(new CardLayout(50,10));
-                JButton listarVagoes = new JButton("Vagoes Livres");
+                JButton listarVagoes = new JButton("Vagões Livres");
                 cardListarVagoes.add(listarVagoes);
                 cardListarVagoes.setSize(200,100);
                 panelEdicao.add(cardListarVagoes);
@@ -357,10 +365,9 @@ public class UI{
                         listaLocomotivas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                         JScrollPane listScroller = new JScrollPane(listaLocomotivas);
                         panelLoc.add(listScroller);
-                        panelLoc.add(voltar);
                         JButton adicionar2 = new JButton("Adicionar");
-                        panelLoc.add(adicionar2);
                         panelLoc.add(voltar);
+                        panelLoc.add(adicionar2);
                         panel.setLayout(new BorderLayout());
                         frame.revalidate();
                         frame.repaint();
@@ -385,7 +392,7 @@ public class UI{
                         panelVag.setLayout(new BoxLayout(panelVag, BoxLayout.Y_AXIS));
 
                         JPanel panelListaVag = new JPanel();
-                        JLabel listaVagoesLabel = new JLabel("Vagoes");
+                        JLabel listaVagoesLabel = new JLabel("Vagões");
                         panelListaVag.add(listaVagoesLabel);
                         panelListaVag.add(listaVagoes);
                         listaVagoesLabel.setLabelFor(listaVagoes);
@@ -421,14 +428,10 @@ public class UI{
 
                 removerUltimo.addActionListener(e1 -> {
                     if (editar.getLast() instanceof Locomotiva && editar.getQtdadeLocomotivas() >= 2) {
-                        for (int i = 0; i < oldListModelL.size(); i++) {
-                            listModelL.addElement(oldListModelL.getElementAt(i));
-                        }
+                        listModelL.addElement((Locomotiva) editar.getLast());
                     }
                     else if (editar.getLast() instanceof Vagao) {
-                        for (int i = 0; i < oldListModelV.size(); i++) {
-                            listModelV.addElement(oldListModelV.getElementAt(i));
-                        }
+                            listModelV.addElement((Vagao) editar.getLast());
                     }
                     App.removeLast(editar);
                 });
@@ -548,8 +551,8 @@ public class UI{
             listaComposicoes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             panelDeletar.add(panelListarDeletar);
 
-            panelDeletar.add(selecionar);
             panelDeletar.add(voltar);
+            panelDeletar.add(selecionar);
 
             frame.setContentPane(panelDeletar);
             frame.revalidate();
@@ -561,14 +564,19 @@ public class UI{
 
             selecionar.addActionListener(s -> {
                 Composicao deletar = (Composicao) listaComposicoes.getSelectedValue();
+                for (int i = 0; i < deletar.getQtdadeCarros(); i++)
+                {
+                    if (deletar.getCarro(i) instanceof Locomotiva)
+                    {
+                        listModelL.addElement((Locomotiva) deletar.getCarro(i));
+                    }
+                    else
+                    {
+                        listModelV.addElement((Vagao) deletar.getCarro(i));
+                    }
+                }
                 defaultListModelC.removeElementAt(listaComposicoes.getSelectedIndex());
                 App.deleteComposition(deletar);
-                for (int i = 0; i < oldListModelL.size(); i++) {
-                    listModelL.addElement(oldListModelL.getElementAt(i));
-                }
-                for (int i = 0; i < oldListModelV.size(); i++) {
-                    listModelV.addElement(oldListModelV.getElementAt(i));
-                }
             });
         });
 
