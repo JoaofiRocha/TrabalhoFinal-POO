@@ -100,6 +100,13 @@ public class App{
         maxPeso = trem.getMaxPesoReal();
     }
 
+    public static boolean check(Composicao c, Vagao v)
+    {
+        if (c.getPesoAtual() + v.getCapacidadeCarga() <= c.getMaxPesoReal() && c.getQtdadeVagoes() + 1 <= c.getMaxVagoesReal())
+            return true;
+        else
+            return false;
+    }
     public static boolean check(double peso)
     {
         oldMaxPeso = maxPeso;

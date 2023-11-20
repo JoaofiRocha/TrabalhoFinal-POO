@@ -134,7 +134,7 @@ public class UI{
 
             // Adicionar locomotivas
             proximo.addActionListener(l -> {
-                int idTrem = Integer.parseInt(id.getText());
+                int idTrem;
 
                 JPanel panelCriar2 = new JPanel();
                 frame.setContentPane(panelCriar2);
@@ -159,11 +159,26 @@ public class UI{
                 panelCriar2.add(panelMontagem);
                 panel.setLayout(new BorderLayout());
 
+                try {
+                    idTrem = Integer.parseInt(id.getText());
+                }
+                catch (NumberFormatException e1)
+                {
+                    idTrem = -1;
+                    JOptionPane.showMessageDialog(frame, "FORMATO INVÁLIDO!", "Erro!", JOptionPane.ERROR_MESSAGE);
+                    panelBotoesCriar.add(voltar);
+                    panelBotoesCriar.add(proximo);
+                    frame.setContentPane(panelCriar);
+                    frame.revalidate();
+                    frame.repaint();
+                }
+
+
                 // Tenta criar o trem com a id solicitada, caso jÃ¡ exista, retorna para o menu anterior
                 try {
                     App.id(idTrem);
                 } catch (IDJaEmUsoException ex) {
-                    System.out.println(ex.getMessage());
+                    JOptionPane.showMessageDialog(frame, ex.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
                     panelBotoesCriar.add(voltar);
                     panelBotoesCriar.add(proximo);
                     frame.setContentPane(panelCriar);
@@ -239,7 +254,8 @@ public class UI{
                                 listaVagoes.clearSelection();
                                 listaVagoes.repaint();
                             }
-
+                            else
+                                JOptionPane.showMessageDialog(frame, "CARGA MÁXIMA DA LOCOMOTIVA EXCEDIDA!", "Erro!", JOptionPane.ERROR_MESSAGE);
                         });
 
                         // Finalizar trem
@@ -253,6 +269,8 @@ public class UI{
                                 frame.setContentPane(panelCriar4);
                                 JLabel fim = new JLabel("Trem criado com sucesso!");
                                 panelCriar4.add(fim);
+                                oldListModelV.clear();
+                                oldListModelL.clear();
                                 panelCriar4.add(voltar);
                                 panel.setLayout(new BorderLayout());
                                 listaComposicoes.revalidate();
@@ -260,18 +278,15 @@ public class UI{
                                 frame.revalidate();
                                 frame.repaint();
                             }
+                            else
+                                JOptionPane.showMessageDialog(frame, "SELECIONE UM VAGÃO!", "Erro!", JOptionPane.ERROR_MESSAGE);
                         });
                     }
+                    else
+                        JOptionPane.showMessageDialog(frame, "SELECIONE UMA LOCOMOTIVA!", "Erro!", JOptionPane.ERROR_MESSAGE);
                 });
 
             });
-
-            id.addActionListener(e1 -> {
-
-            });
-
-
-
         });
 
         // Editar Trem
@@ -305,198 +320,215 @@ public class UI{
 
             selecionar.addActionListener(s -> {
                 Composicao editar = (Composicao) listaComposicoes.getSelectedValue();
-                App.loadComposition(editar);
-                JPanel panelEdicao = new JPanel();
-                panelEdicao.setLayout(new BoxLayout(panelEdicao, BoxLayout.Y_AXIS));
+                if(editar == null)
+                {
+                    JOptionPane.showMessageDialog(frame, "SELECIONE UM TREM PARA EDITAR!", "Editar Trem!", JOptionPane.ERROR_MESSAGE);
 
-                JPanel cardInserirLocomotiva = new JPanel();
-                cardInserirLocomotiva.setLayout(new CardLayout(50,10));
-                JButton inserirLocomotiva = new JButton("Inserir Locomotiva");
-                cardInserirLocomotiva.add(inserirLocomotiva);
-                cardInserirLocomotiva.setSize(200,100);
-                panelEdicao.add(cardInserirLocomotiva);
+                }
+                else
+                {
+                    App.loadComposition(editar);
+                    JPanel panelEdicao = new JPanel();
+                    panelEdicao.setLayout(new BoxLayout(panelEdicao, BoxLayout.Y_AXIS));
 
-                JPanel cardInserirVagao = new JPanel();
-                cardInserirVagao.setLayout(new CardLayout(50,10));
-                JButton inserirVagao = new JButton("Inserir Vagão");
-                cardInserirVagao.add(inserirVagao);
-                cardInserirVagao.setSize(200,100);
-                panelEdicao.add(cardInserirVagao);
+                    JPanel cardInserirLocomotiva = new JPanel();
+                    cardInserirLocomotiva.setLayout(new CardLayout(50, 10));
+                    JButton inserirLocomotiva = new JButton("Inserir Locomotiva");
+                    cardInserirLocomotiva.add(inserirLocomotiva);
+                    cardInserirLocomotiva.setSize(200, 100);
+                    panelEdicao.add(cardInserirLocomotiva);
 
-                JPanel cardRemoverUltimo = new JPanel();
-                cardRemoverUltimo.setLayout(new CardLayout(50,10));
-                JButton removerUltimo = new JButton("Remover Último Elemento");
-                cardRemoverUltimo.add(removerUltimo);
-                cardRemoverUltimo.setSize(200,100);
-                panelEdicao.add(cardRemoverUltimo);
+                    JPanel cardInserirVagao = new JPanel();
+                    cardInserirVagao.setLayout(new CardLayout(50, 10));
+                    JButton inserirVagao = new JButton("Inserir Vagão");
+                    cardInserirVagao.add(inserirVagao);
+                    cardInserirVagao.setSize(200, 100);
+                    panelEdicao.add(cardInserirVagao);
 
-                JPanel cardListarLocomotivas = new JPanel();
-                cardListarLocomotivas.setLayout(new CardLayout(50,10));
-                JButton listarLocomotivas = new JButton("Locomotivas Livres");
-                cardListarLocomotivas.add(listarLocomotivas);
-                cardListarLocomotivas.setSize(200,100);
-                panelEdicao.add(cardListarLocomotivas);
+                    JPanel cardRemoverUltimo = new JPanel();
+                    cardRemoverUltimo.setLayout(new CardLayout(50, 10));
+                    JButton removerUltimo = new JButton("Remover Último Elemento");
+                    cardRemoverUltimo.add(removerUltimo);
+                    cardRemoverUltimo.setSize(200, 100);
+                    panelEdicao.add(cardRemoverUltimo);
 
-                JPanel cardListarVagoes = new JPanel();
-                cardListarVagoes.setLayout(new CardLayout(50,10));
-                JButton listarVagoes = new JButton("Vagões Livres");
-                cardListarVagoes.add(listarVagoes);
-                cardListarVagoes.setSize(200,100);
-                panelEdicao.add(cardListarVagoes);
+                    JPanel cardListarLocomotivas = new JPanel();
+                    cardListarLocomotivas.setLayout(new CardLayout(50, 10));
+                    JButton listarLocomotivas = new JButton("Locomotivas Livres");
+                    cardListarLocomotivas.add(listarLocomotivas);
+                    cardListarLocomotivas.setSize(200, 100);
+                    panelEdicao.add(cardListarLocomotivas);
 
-                JPanel cardVoltar = new JPanel();
-                cardVoltar.setLayout(new CardLayout(50,10));
-                cardVoltar.add(voltar);
-                cardVoltar.setSize(200,100);
-                panelEdicao.add(cardVoltar);
+                    JPanel cardListarVagoes = new JPanel();
+                    cardListarVagoes.setLayout(new CardLayout(50, 10));
+                    JButton listarVagoes = new JButton("Vagões Livres");
+                    cardListarVagoes.add(listarVagoes);
+                    cardListarVagoes.setSize(200, 100);
+                    panelEdicao.add(cardListarVagoes);
 
-                frame.setContentPane(panelEdicao);
-                frame.revalidate();
-                frame.repaint();
+                    JPanel cardVoltar = new JPanel();
+                    cardVoltar.setLayout(new CardLayout(50, 10));
+                    cardVoltar.add(voltar);
+                    cardVoltar.setSize(200, 100);
+                    panelEdicao.add(cardVoltar);
 
-                inserirLocomotiva.addActionListener(e1 -> {
-                    if (App.check(3)) {
-                        JPanel panelLoc = new JPanel();
-                        frame.setContentPane(panelLoc);
-                        JLabel listaLocomotivasLabel = new JLabel("Locomotivas");
-                        panelLoc.add(listaLocomotivasLabel);
-                        panelLoc.add(listaLocomotivas);
-                        listaLocomotivasLabel.setLabelFor(listaLocomotivas);
+                    frame.setContentPane(panelEdicao);
+                    frame.revalidate();
+                    frame.repaint();
+
+                    inserirLocomotiva.addActionListener(e1 -> {
+                        if (App.check(3)) {
+                            JPanel panelLoc = new JPanel();
+                            frame.setContentPane(panelLoc);
+                            JLabel listaLocomotivasLabel = new JLabel("Locomotivas");
+                            panelLoc.add(listaLocomotivasLabel);
+                            panelLoc.add(listaLocomotivas);
+                            listaLocomotivasLabel.setLabelFor(listaLocomotivas);
+                            listaLocomotivas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                            JScrollPane listScroller = new JScrollPane(listaLocomotivas);
+                            panelLoc.add(listScroller);
+                            JButton adicionar2 = new JButton("Adicionar");
+                            panelLoc.add(voltar);
+                            panelLoc.add(adicionar2);
+                            panel.setLayout(new BorderLayout());
+                            frame.revalidate();
+                            frame.repaint();
+
+                            adicionar2.addActionListener(a -> {
+                                Locomotiva loc = (Locomotiva) listaLocomotivas.getSelectedValue();
+                                App.addLocomotiva(loc);
+                                DefaultListModel<Locomotiva> defaultListModel = (DefaultListModel<Locomotiva>) listaLocomotivas.getModel();
+                                oldListModelL.addElement(defaultListModel.getElementAt(listaLocomotivas.getSelectedIndex()));
+                                defaultListModel.removeElementAt(listaLocomotivas.getSelectedIndex());
+                                listaLocomotivas.clearSelection();
+                                listaLocomotivas.repaint();
+                            });
+                        }
+                        else
+                            JOptionPane.showMessageDialog(frame, "NÃO É POSSÍVEL INSERIR LOCOMOTIVA!", "Erro!", JOptionPane.ERROR_MESSAGE);
+                    });
+
+                    inserirVagao.addActionListener(e1 -> {
+                        if (App.check(1)) {
+                            App.calc();
+                            JPanel panelVag = new JPanel();
+                            frame.setContentPane(panelVag);
+                            panelVag.setLayout(new BoxLayout(panelVag, BoxLayout.Y_AXIS));
+
+                            JPanel panelListaVag = new JPanel();
+                            JLabel listaVagoesLabel = new JLabel("Vagões");
+                            panelListaVag.add(listaVagoesLabel);
+                            panelListaVag.add(listaVagoes);
+                            listaVagoesLabel.setLabelFor(listaVagoes);
+                            listaVagoes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                            JScrollPane listScroller2 = new JScrollPane(listaVagoes);
+                            panelListaVag.add(listScroller2);
+                            panelVag.add(panelListaVag);
+
+                            JPanel panelBotoesAddVagoes = new JPanel();
+                            panelBotoesAddVagoes.add(voltar);
+                            JButton adicionar3 = new JButton("Adicionar");
+                            panelBotoesAddVagoes.add(adicionar3);
+                            panelVag.add(panelBotoesAddVagoes);
+
+                            panel.setLayout(new BorderLayout());
+                            frame.revalidate();
+                            frame.repaint();
+
+                            adicionar3.addActionListener(a -> {
+                                if (App.check(editar, (Vagao) listaVagoes.getSelectedValue())) {
+                                    Vagao vag = (Vagao) listaVagoes.getSelectedValue();
+                                    App.addVagao(vag);
+                                    DefaultListModel<Vagao> defaultListModelV = (DefaultListModel<Vagao>) listaVagoes.getModel();
+                                    oldListModelV.addElement(defaultListModelV.getElementAt(listaVagoes.getSelectedIndex()));
+                                    defaultListModelV.removeElementAt(listaVagoes.getSelectedIndex());
+                                    listaVagoes.clearSelection();
+                                    listaVagoes.repaint();
+                                }
+                                else
+                                    JOptionPane.showMessageDialog(frame, "CARGA MÁXIMA DA LOCOMOTIVA EXCEDIDA!", "Erro!", JOptionPane.ERROR_MESSAGE);
+                            });
+                        }
+                        else
+                            JOptionPane.showMessageDialog(frame, "CARGA MÁXIMA DA LOCOMOTIVA ARROZ!", "Erro!", JOptionPane.ERROR_MESSAGE);
+                    });
+
+                    removerUltimo.addActionListener(e1 -> {
+                        if (editar.getQtdadeCarros() != 1)
+                        {
+                            JOptionPane.showMessageDialog(frame, "Removido Com Sucesso!", "Deu Certo!", JOptionPane.INFORMATION_MESSAGE);
+                            if (editar.getLast() instanceof Locomotiva && editar.getQtdadeLocomotivas() >= 2) {
+                                listModelL.addElement((Locomotiva) editar.getLast());
+                            } else if (editar.getLast() instanceof Vagao) {
+                                listModelV.addElement((Vagao) editar.getLast());
+                            }
+                            App.removeLast(editar);
+                        } else
+                            JOptionPane.showMessageDialog(frame, "NÃO É POSSÍVEL REMOVER!", "Último Elemento!", JOptionPane.ERROR_MESSAGE);
+                    });
+
+                    listarLocomotivas.addActionListener(e1 -> {
+                        JPanel panelLista = new JPanel();
+                        frame.setContentPane(panelLista);
+                        panelLista.setLayout(new BoxLayout(panelLista, BoxLayout.Y_AXIS));
+
+                        JButton voltarB = new JButton("Voltar");
+
+                        JPanel panelListaLoc = new JPanel();
+                        JLabel listaLocLabel = new JLabel("Locomotivas");
+                        listaLocLabel.setLabelFor(listaLocomotivas);
+                        panelListaLoc.add(listaLocLabel);
+                        panelListaLoc.add(listaLocomotivas);
                         listaLocomotivas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                        listaLocomotivas.setMaximumSize(new Dimension(300, 100));
                         JScrollPane listScroller = new JScrollPane(listaLocomotivas);
-                        panelLoc.add(listScroller);
-                        JButton adicionar2 = new JButton("Adicionar");
-                        panelLoc.add(voltar);
-                        panelLoc.add(adicionar2);
-                        panel.setLayout(new BorderLayout());
+                        panelListaLoc.add(listScroller);
+                        listaLocomotivas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                        panelLista.add(panelListaLoc);
+
+                        panelLista.add(voltarB);
+                        panelLista.add(Box.createVerticalGlue());
                         frame.revalidate();
                         frame.repaint();
 
-                        adicionar2.addActionListener(a -> {
-                            Locomotiva loc = (Locomotiva) listaLocomotivas.getSelectedValue();
-                            App.addLocomotiva(loc);
-                            DefaultListModel<Locomotiva> defaultListModel = (DefaultListModel<Locomotiva>) listaLocomotivas.getModel();
-                            oldListModelL.addElement(defaultListModel.getElementAt(listaLocomotivas.getSelectedIndex()));
-                            defaultListModel.removeElementAt(listaLocomotivas.getSelectedIndex());
-                            listaLocomotivas.clearSelection();
-                            listaLocomotivas.repaint();
+                        voltarB.addActionListener(e2 -> {
+                            returnToMenu();
                         });
-                    }
-                });
+                    });
 
-                inserirVagao.addActionListener(e1 -> {
-                    if (App.check(1)) {
-                        App.calc();
-                        JPanel panelVag = new JPanel();
-                        frame.setContentPane(panelVag);
-                        panelVag.setLayout(new BoxLayout(panelVag, BoxLayout.Y_AXIS));
+                    listarVagoes.addActionListener(e1 -> {
+                        JPanel panelLista = new JPanel();
+                        frame.setContentPane(panelLista);
+                        panelLista.setLayout(new BoxLayout(panelLista, BoxLayout.Y_AXIS));
+
+                        JButton voltarB = new JButton("Voltar");
 
                         JPanel panelListaVag = new JPanel();
-                        JLabel listaVagoesLabel = new JLabel("Vagões");
-                        panelListaVag.add(listaVagoesLabel);
+                        JLabel listaVagLabel = new JLabel("Vagões");
+                        listaVagLabel.setLabelFor(listaVagoes);
+                        panelListaVag.add(listaVagLabel);
                         panelListaVag.add(listaVagoes);
-                        listaVagoesLabel.setLabelFor(listaVagoes);
                         listaVagoes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-                        JScrollPane listScroller2 = new JScrollPane(listaVagoes);
-                        panelListaVag.add(listScroller2);
-                        panelVag.add(panelListaVag);
+                        listaVagoes.setMaximumSize(new Dimension(300, 100));
+                        JScrollPane listScroller = new JScrollPane(listaVagoes);
+                        panelListaVag.add(listScroller);
+                        listaVagoes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                        panelLista.add(panelListaVag);
 
-                        JPanel panelBotoesAddVagoes = new JPanel();
-                        panelBotoesAddVagoes.add(voltar);
-                        JButton adicionar3 = new JButton("Adicionar");
-                        panelBotoesAddVagoes.add(adicionar3);
-                        panelVag.add(panelBotoesAddVagoes);
-
-                        panel.setLayout(new BorderLayout());
+                        panelLista.add(voltarB);
+                        panelLista.add(Box.createVerticalGlue());
                         frame.revalidate();
                         frame.repaint();
 
-                        adicionar3.addActionListener(a -> {
-                            if (App.check(((Vagao) listaVagoes.getSelectedValue()).getCapacidadeCarga()))
-                            {
-                                Vagao vag = (Vagao) listaVagoes.getSelectedValue();
-                                App.addVagao(vag);
-                                DefaultListModel<Vagao> defaultListModelV = (DefaultListModel<Vagao>) listaVagoes.getModel();
-                                oldListModelV.addElement(defaultListModelV.getElementAt(listaVagoes.getSelectedIndex()));
-                                defaultListModelV.removeElementAt(listaVagoes.getSelectedIndex());
-                                listaVagoes.clearSelection();
-                                listaVagoes.repaint();
-                            }
+                        voltarB.addActionListener(e2 -> {
+                            returnToMenu();
                         });
-                    }
-                });
+                    });
 
-                removerUltimo.addActionListener(e1 -> {
-                    if (editar.getLast() instanceof Locomotiva && editar.getQtdadeLocomotivas() >= 2) {
-                        listModelL.addElement((Locomotiva) editar.getLast());
-                    }
-                    else if (editar.getLast() instanceof Vagao) {
-                            listModelV.addElement((Vagao) editar.getLast());
-                    }
-                    App.removeLast(editar);
-                });
-
-                listarLocomotivas.addActionListener(e1 -> {
-                    JPanel panelLista = new JPanel();
-                    frame.setContentPane(panelLista);
-                    panelLista.setLayout(new BoxLayout(panelLista, BoxLayout.Y_AXIS));
-
-                    JButton voltarB = new JButton("Voltar");
-
-                    JPanel panelListaLoc = new JPanel();
-                    JLabel listaLocLabel = new JLabel("Locomotivas");
-                    listaLocLabel.setLabelFor(listaLocomotivas);
-                    panelListaLoc.add(listaLocLabel);
-                    panelListaLoc.add(listaLocomotivas);
-                    listaLocomotivas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-                    listaLocomotivas.setMaximumSize(new Dimension(300,100));
-                    JScrollPane listScroller = new JScrollPane(listaLocomotivas);
-                    panelListaLoc.add(listScroller);
-                    listaLocomotivas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-                    panelLista.add(panelListaLoc);
-
-                    panelLista.add(voltarB);
-                    panelLista.add(Box.createVerticalGlue());
-                    frame.revalidate();
-                    frame.repaint();
-
-                    voltarB.addActionListener(e2 -> {
+                    voltar.addActionListener(e1 -> {
                         returnToMenu();
                     });
-                });
-
-                listarVagoes.addActionListener(e1 -> {
-                    JPanel panelLista = new JPanel();
-                    frame.setContentPane(panelLista);
-                    panelLista.setLayout(new BoxLayout(panelLista, BoxLayout.Y_AXIS));
-
-                    JButton voltarB = new JButton("Voltar");
-
-                    JPanel panelListaVag = new JPanel();
-                    JLabel listaVagLabel = new JLabel("Vagões");
-                    listaVagLabel.setLabelFor(listaVagoes);
-                    panelListaVag.add(listaVagLabel);
-                    panelListaVag.add(listaVagoes);
-                    listaVagoes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-                    listaVagoes.setMaximumSize(new Dimension(300,100));
-                    JScrollPane listScroller = new JScrollPane(listaVagoes);
-                    panelListaVag.add(listScroller);
-                    listaVagoes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-                    panelLista.add(panelListaVag);
-
-                    panelLista.add(voltarB);
-                    panelLista.add(Box.createVerticalGlue());
-                    frame.revalidate();
-                    frame.repaint();
-
-                    voltarB.addActionListener(e2 -> {
-                        returnToMenu();
-                    });
-                });
-
-                voltar.addActionListener(e1 -> {
-                    returnToMenu();
-                });
+                }
             });
         });
 
@@ -564,19 +596,22 @@ public class UI{
 
             selecionar.addActionListener(s -> {
                 Composicao deletar = (Composicao) listaComposicoes.getSelectedValue();
-                for (int i = 0; i < deletar.getQtdadeCarros(); i++)
+                if(deletar == null)
                 {
-                    if (deletar.getCarro(i) instanceof Locomotiva)
-                    {
-                        listModelL.addElement((Locomotiva) deletar.getCarro(i));
-                    }
-                    else
-                    {
-                        listModelV.addElement((Vagao) deletar.getCarro(i));
-                    }
+                    JOptionPane.showMessageDialog(frame, "SELECIONE UM TREM PARA EXCLUIR!", "Erro!", JOptionPane.ERROR_MESSAGE);
                 }
-                defaultListModelC.removeElementAt(listaComposicoes.getSelectedIndex());
-                App.deleteComposition(deletar);
+                else
+                {
+                    for (int i = 0; i < deletar.getQtdadeCarros(); i++) {
+                        if (deletar.getCarro(i) instanceof Locomotiva) {
+                            listModelL.addElement((Locomotiva) deletar.getCarro(i));
+                        } else {
+                            listModelV.addElement((Vagao) deletar.getCarro(i));
+                        }
+                    }
+                    defaultListModelC.removeElementAt(listaComposicoes.getSelectedIndex());
+                    App.deleteComposition(deletar);
+                }
             });
         });
 
@@ -585,6 +620,7 @@ public class UI{
             App.salvar("loc.csv", App.salvar(garagemLocomotivas));
             App.salvar("vag.csv", App.salvar(garagemVagoes));
             App.salvar("comp.csv", App.salvar(patioComposicoes));
+            JOptionPane.showMessageDialog(frame, "Composições Salvas com Sucesso", "Deu Certo!", JOptionPane.INFORMATION_MESSAGE);
         });
 
 
