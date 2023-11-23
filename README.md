@@ -1,3 +1,18 @@
+# TrabalhoFinalTrem
+
+## Equipe de Desenvolvimento
+
+Joao Filipe Rocha,
+Leonado Gamarra,
+Ricardo Batista
+
+## Descrição
+
+Este é um programa simples de gerenciamento de trens que permite criar, editar, listar, desfazer os trens e salvar.
+
+## Funcionamento
+
+
 ![image](https://github.com/JoaofiRocha/TrabalhoFinal-POO/assets/142347210/726882d1-397e-424a-a0b7-f9efc9cfce7d)
 
 ![image](https://github.com/JoaofiRocha/TrabalhoFinal-POO/assets/142347210/33fe844d-395f-4d60-b8d0-c9b55abfacbc)
