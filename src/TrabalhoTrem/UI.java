@@ -5,10 +5,16 @@ import java.awt.*;
 
 import static TrabalhoTrem.App.*;
 
+/**
+ * Esta classe contém toda UI
+ */
 public class UI{
     private JFrame frame;
     private JPanel panel;
 
+    /**
+     * Este método é responsável pela execução completa da interface gráfica
+     */
     public void createAndShow(){
         JFrame.setDefaultLookAndFeelDecorated(true);
         Font defaultFont = new Font("Arial", Font.PLAIN, 20);
@@ -632,12 +638,22 @@ public class UI{
 
     }
 
+    /**
+     * Este método é utilizado para retornar a interface para o menu
+     * @author joao.farah@edu.pucrs.br
+     */
     private void returnToMenu(){
         frame.setContentPane(panel);
         frame.revalidate();
         frame.repaint();
     }
 
+    /**
+     * Este método adiciona um JTextField a um painel, além de adicionar um JLabel ao JTextField criado
+     * @param panel Painel para adicionar o JTextField
+     * @param label String para criar o JLabel
+     * @return O JTextField gerado
+     */
     private JTextField addTextField(JPanel panel, String label) {
         JLabel l = new JLabel(label, JLabel.TRAILING);
         panel.add(l);

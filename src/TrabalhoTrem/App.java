@@ -14,14 +14,33 @@ import java.nio.file.Files;
  * @version 15/10/23
  */
 public class App{
+
+    // Garagem onde as locomotivas ficam armazenadas
     static GaragemLocomotivas garagemLocomotivas;
+
+    // Garagem onde os vagões ficam armazenados
     static GaragemVagoes garagemVagoes;
+
+    // Pátio onde as composições estão armazenadas
     static PatioComposicoes patioComposicoes;
+
+    // Um objeto da classe composição, utilizado para criação e edição de composições
     static Composicao trem;
+
+    // As variáveis abaixo são utilizadas de forma temporária para armazenar informações da composição
+    // Quantidade máxima de vagões
     static int maxVagoes = 0;
+
+    // Peso máximo
     static double maxPeso = 0;
+
+    // Quantidade máxima de vagões anterior
     static int oldMaxVagoes = 0;
+
+    // Peso máximo anterior
     static double oldMaxPeso = 0;
+
+    // String para a visualização da composição
     static String montagemString = "";
 
     /**
@@ -74,6 +93,11 @@ public class App{
 
     }
 
+    /**
+     * Este método é utilizado para criar um novo trem
+     * @param n o id usado para a nova composição
+     * @author l.gamarra@edu.pucrs.br, joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+     */
     public static void id (int n)
     {
         try {
@@ -83,16 +107,30 @@ public class App{
         }
     }
 
+    /**
+     * Este método é utilizado para adicionar uma locomotiva a composição
+     * @param loc Locomotiva a ser engatada na composição
+     * @author l.gamarra@edu.pucrs.br, joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+     */
     public static void addLocomotiva (Locomotiva loc)
     {
         trem.engata(loc, garagemLocomotivas);
     }
 
+    /**
+     * Este método é utilizado para adicionar um vagão a composição
+     * @param vag Vagão a ser engatado na composição
+     * @author l.gamarra@edu.pucrs.br, joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+     */
     public static void addVagao (Vagao vag)
     {
         trem.engata(vag, garagemVagoes);
     }
 
+    /**
+     * Este método calcula as reais capacidades da composição
+     * @author l.gamarra@edu.pucrs.br, joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+     */
     public static void calc()
     {
         trem.calcularCapacidadeReal();
@@ -100,6 +138,14 @@ public class App{
         maxPeso = trem.getMaxPesoReal();
     }
 
+
+    /**
+     * Este método calcula a possibilidade de engatar um vagão a uma composição
+     * @param c Composição na qual o vagão vai ser engatado
+     * @param v Vagão a ser engatado na composição
+     * @return True, caso seja possível adicionar o vagão a composição, caso contrário, false
+     * @author l.gamarra@edu.pucrs.br, joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+     */
     public static boolean check(Composicao c, Vagao v)
     {
         if (c.getPesoAtual() + v.getCapacidadeCarga() <= c.getMaxPesoReal() && c.getQtdadeVagoes() + 1 <= c.getMaxVagoesReal())
@@ -107,6 +153,13 @@ public class App{
         else
             return false;
     }
+
+    /**
+     * Verifica a possibilidade de adicionar um vagão a composição
+     * @param peso Capacidade de peso do vagão a ser adicionado
+     * @return True, caso seja possível adicionar o vagão a composição, caso contrário, false
+     * @author l.gamarra@edu.pucrs.br, joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+     */
     public static boolean check(double peso)
     {
         oldMaxPeso = maxPeso;
@@ -126,6 +179,12 @@ public class App{
     }
 
 
+    /**
+     * Este método confere a possibilidade de realizar alguma ação
+     * @param n Caso 1: A composição não contém locomotivas, retorna false | Caso 2: A composição não contém vagões, retorna false | Caso 3: A composição contém algum vagão, retorna false
+     * @return True, caso a ação seja possível, caso contrário, retorna false
+     * @author l.gamarra@edu.pucrs.br, joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+     */
     public static boolean check(int n)
     {
         if (n == 1 && trem.getQtdadeLocomotivas() == 0)
@@ -138,12 +197,20 @@ public class App{
             return true;
     }
 
+    /**
+     * Este método é utilizado para adicionar uma composição ao pátio
+     * @author l.gamarra@edu.pucrs.br, joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+     */
     public static void addTrem()
     {
         patioComposicoes.setComposicao(trem);
         reset();
     }
 
+    /**
+     * Este método é utilizado para resetar as variáveis utilizadas na criação de uma composição
+     * @author l.gamarra@edu.pucrs.br, joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+     */
     public static void reset()
     {
         trem = null;
@@ -154,6 +221,12 @@ public class App{
         montagemString = "";
     }
 
+    /**
+     * Este método é responsável por adicionar a uma String de visualização uma locomotiva
+     * @param loc Locomotiva a ser adicionada a visualização
+     * @return a String de visualização atualizada
+     * @author l.gamarra@edu.pucrs.br, joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+     */
     public static String visualComposition(Locomotiva loc){
         if (montagemString.equals(""))
             montagemString = "L" + loc.getIdentificador();
@@ -162,6 +235,12 @@ public class App{
         return montagemString;
     }
 
+    /**
+     * Este método é responsável por adicionar a uma String de visualização um vagão
+     * @param vag Vagão a ser adicionado a visualização
+     * @return a String de visualização atualizada
+     * @author l.gamarra@edu.pucrs.br, joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+     */
     public static String visualComposition(Vagao vag){
         if (montagemString.equals(""))
             montagemString = "V" + vag.getIdentificador();
@@ -170,6 +249,11 @@ public class App{
         return montagemString;
     }
 
+    /**
+     * Este método é utilizado para remover o último elemento de uma composição
+     * @param comp Composição de onde o elemento será removido
+     * @author l.gamarra@edu.pucrs.br, joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+     */
     public static void removeLast(Composicao comp) {
         if (comp.getLast() instanceof Locomotiva && comp.getQtdadeLocomotivas() >= 2)
             comp.desengata(garagemLocomotivas);
@@ -177,10 +261,20 @@ public class App{
             comp.desengata(garagemVagoes);
     }
 
+    /**
+     * Este método é utilizado para carregar uma composição
+     * @param comp Composição para ser carregada
+     * @author l.gamarra@edu.pucrs.br, joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+     */
     public static void loadComposition(Composicao comp) {
         trem = comp;
     }
 
+    /**
+     * Este método retorna a composição armazenada na classe App
+     * @return Composição armazenada na classe App
+     * @author l.gamarra@edu.pucrs.br, joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+     */
     public static Composicao getTrem()
     {
         return trem;
@@ -337,6 +431,13 @@ public class App{
 
     }
 
+    /**
+     * Este método cria a String da montagem de uma composição
+     * @param trens Local onde as composições estão armazenados
+     * @param i Posição da composição na lista
+     * @return String da montagem de uma composição
+     * @author l.gamarra@edu.pucrs.br
+     */
     public static String vizualizaComposicoes(PatioComposicoes trens, int i){
         // Inicializa strings com valores de cores
         String reset = "\u001B[0m";
@@ -776,15 +877,11 @@ public class App{
         return result;
     }
 
-    public static String addEspacos(int n, int s){
-        String res ="";
-        for (int i = 0; i < n - s; i++) {
-            res += " ";
-        }
-        return res;
-    }
-
-
+    /**
+     * Este método cria uma Array com todas as composições
+     * @return Array com todas as composições
+     * @author l.gamarra@edu.pucrs.br, joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+     */
     public static Composicao[] composicoesToList()
     {
         Composicao[] res = new Composicao[patioComposicoes.totalComposicoes()];
@@ -797,6 +894,11 @@ public class App{
         return res;
     }
 
+    /**
+     * Este método cria uma Array com todas as locomotivas
+     * @return Array com todas as locomotivas
+     * @author l.gamarra@edu.pucrs.br, joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+     */
     public static Locomotiva[] locomotivasToList()
     {
         Locomotiva[] res = new Locomotiva[garagemLocomotivas.totalLocomotivas()];
@@ -809,6 +911,11 @@ public class App{
         return res;
     }
 
+    /**
+     * Este método cria uma Array com todos os vagões
+     * @return Array com todos os vagões
+     * @author l.gamarra@edu.pucrs.br, joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+     */
     public static Vagao[] vagoesToList()
     {
         Vagao[] res = new Vagao[garagemVagoes.totalVagoes()];
@@ -821,6 +928,11 @@ public class App{
         return res;
     }
 
+    /**
+     * Este método cria uma Array com todas as locomotivas
+     * @return Array com todas as locomotivas
+     * @author l.gamarra@edu.pucrs.br, joao.farah@edu.pucrs.br, ricardo.rossa@edu.pucrs.br
+     */
     public static void deleteComposition(Composicao comp) {
         do
         {
